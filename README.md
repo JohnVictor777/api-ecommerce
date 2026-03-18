@@ -48,7 +48,7 @@ O sistema foi modelado utilizando UML (Diagrama de Classes), contendo as princip
 
 ## 📊 Diagrama UML
 
-📷 *Adicione aqui a imagem do seu diagrama*
+<img width="1560" height="756" alt="Diagrama-api-e-commerce" src="https://github.com/user-attachments/assets/98d59cca-3abd-4b22-a8f7-d77ebd47c2cd" />
 
 ---
 
