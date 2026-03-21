@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace ApiEcommerce.Models
 {
+    // Enum para representar os status dos pedidos e pagamentos
     public class Enum
     {
         public enum StatusPedido
