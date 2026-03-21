@@ -65,8 +65,8 @@ O sistema foi modelado utilizando UML (Diagrama de Classes), contendo as princip
 ## 🚀 Próximos passos
 
 * [x] Criar estrutura inicial do projeto (.NET)
-* [ ] Implementar entidades do domínio
-* [ ] Configurar banco de dados
+* [x] Implementar entidades do domínio
+* [x] Configurar banco de dados
 * [ ] Criar controllers básicos
 * [ ] Implementar regras de negócio
 
