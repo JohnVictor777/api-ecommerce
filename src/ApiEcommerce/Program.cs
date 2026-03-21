@@ -1,14 +1,20 @@
-var builder = WebApplication.CreateBuilder(args);
+using ApiEcommerce.Data;
+using Microsoft.EntityFrameworkCore;
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Configurar o DbContext para usar SQL Server
+builder.Services.AddDbContext<ConnectionFactory>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
 var app = builder.Build();
 
+// Configurar o middleware para usar Swagger apenas em desenvolvimento
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
