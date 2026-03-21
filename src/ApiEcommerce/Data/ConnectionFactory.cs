@@ -13,7 +13,7 @@ namespace ApiEcommerce.Data
         }
 
         // Defina os DbSet para cada entidade do seu modelo
-        public DbSet<Models.Usuario> Clientes { get; set; }
+        public DbSet<Models.Usuario> Usuarios { get; set; }
         public DbSet<Models.Produto> Produtos { get; set; }
         public DbSet<Models.Pedido> Pedidos { get; set; }
         public DbSet<Models.ItemPedido> ItensPedido { get; set; }

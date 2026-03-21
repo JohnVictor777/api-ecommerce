@@ -174,7 +174,7 @@ namespace ApiEcommerce.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Clientes");
+                    b.ToTable("Usuarios");
                 });
 
             modelBuilder.Entity("ApiEcommerce.Models.Carrinho", b =>

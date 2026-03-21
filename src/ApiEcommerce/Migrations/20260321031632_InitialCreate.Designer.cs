@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ApiEcommerce.Migrations
 {
     [DbContext(typeof(ConnectionFactory))]
-    [Migration("20260321024708_InitialCreate")]
+    [Migration("20260321031632_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -177,7 +177,7 @@ namespace ApiEcommerce.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Clientes");
+                    b.ToTable("Usuarios");
                 });
 
             modelBuilder.Entity("ApiEcommerce.Models.Carrinho", b =>
