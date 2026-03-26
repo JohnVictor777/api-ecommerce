@@ -1,16 +1,19 @@
 using ApiEcommerce.Data;
+using ApiEcommerce.Repositories;
+using ApiEcommerce.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
+builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<ProdutoRepositorie>();
+builder.Services.AddScoped<ProdutoService>();
 
 // Configurar o DbContext para usar SQL Server
 builder.Services.AddDbContext<ConnectionFactory>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
 
 var app = builder.Build();
 
@@ -22,8 +25,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-
+app.UseMiddleware<ApiEcommerce.Middlewares.ErrorHandlingMiddleware>();
+app.MapControllers();
 app.MapGet("/health", () => new { status = "OK" });
 
 app.Run();
