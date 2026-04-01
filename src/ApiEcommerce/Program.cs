@@ -5,10 +5,13 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Adicionar serviços ao contêiner de injeção de dependência
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<UsuarioRepositorie>();
 builder.Services.AddScoped<ProdutoRepositorie>();
+builder.Services.AddScoped<UsuarioService>();
 builder.Services.AddScoped<ProdutoService>();
 
 // Configurar o DbContext para usar SQL Server
