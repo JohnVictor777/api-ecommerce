@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using ApiEcommerce.Services;
 
 namespace ApiEcommerce.Controllers
 {
@@ -12,24 +13,32 @@ namespace ApiEcommerce.Controllers
     [Route("api/[controller]")]
     public class UsuarioController : ControllerBase
     {
-        private readonly ILogger<UsuarioController> _logger;
+        private readonly UsuarioService _service;
 
-        public UsuarioController(ILogger<UsuarioController> logger)
+        public UsuarioController(UsuarioService service)
         {
-            _logger = logger;
+            _service = service;
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            _logger.LogInformation("Requisição GET em Usuario.");
+            var usuarios = await _service.GetAll();
+            return Ok(usuarios);
+        }
 
-            if (false) // Simulando um erro
-            {
-                throw new Exception("Erro de teste");
-            }
+        [HttpPost]
+        public async Task<IActionResult> Create(UsuarioCreateDTO dto)
+        {
+            await _service.Create(dto);
+            return Created("", dto);
+        }
 
-            return Ok(new { Message = "Requisição GET em Usuario bem-sucedida." });
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            await _service.Delete(id);
+            return NoContent();
         }
     }
 }
