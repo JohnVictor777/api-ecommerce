@@ -11,8 +11,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<UsuarioRepositorie>();
 builder.Services.AddScoped<ProdutoRepositorie>();
+builder.Services.AddScoped<PedidoRepository>();
 builder.Services.AddScoped<UsuarioService>();
 builder.Services.AddScoped<ProdutoService>();
+builder.Services.AddScoped<PedidoService>();
 
 // Configurar o DbContext para usar SQL Server
 builder.Services.AddDbContext<ConnectionFactory>(options =>

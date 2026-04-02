@@ -17,6 +17,12 @@ namespace ApiEcommerce.Repositories
             _context = context;
         }
 
+        public async Task<Produto?> GetById(Guid id)
+        {
+            return await _context
+                .Produtos.FirstOrDefaultAsync(p => p.Id == id);
+        }
+
         public async Task<List<Produto>> GetAll()
         {
             return await _context.Produtos.ToListAsync();
@@ -39,5 +45,6 @@ namespace ApiEcommerce.Repositories
             _context.Produtos.Remove(produto);
             await _context.SaveChangesAsync();
         }
+
     }
 }
