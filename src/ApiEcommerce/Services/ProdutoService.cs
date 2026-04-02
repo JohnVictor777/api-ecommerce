@@ -31,12 +31,12 @@ namespace ApiEcommerce.Services
 
         public async Task Create(ProdutoCreateDTO dto)
         {
+
             var produto = new Produto
             {
                 Id = Guid.NewGuid(),
                 Nome = dto.Nome,
-                Preco = dto.Preco,
-                Estoque = dto.Estoque
+                Preco = dto.Preco
             };
 
             await _repositorie.Add(produto);

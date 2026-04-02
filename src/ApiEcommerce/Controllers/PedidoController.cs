@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using ApiEcommerce.DTOs;
+using ApiEcommerce.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -12,24 +14,32 @@ namespace ApiEcommerce.Controllers
     [Route("api/[controller]")]
     public class PedidoController : ControllerBase
     {
-        private readonly ILogger<PedidoController> _logger;
+        private readonly PedidoService _service;
 
-        public PedidoController(ILogger<PedidoController> logger)
+        public PedidoController(PedidoService service)
         {
-            _logger = logger;
+            _service = service;
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            _logger.LogInformation("Requisição GET em Pedido.");
+            var pedidos = await _service.GetAll();
+            return Ok(pedidos);
+        }
 
-            if (false) // Simulando um erro
-            {
-                throw new Exception("Erro de teste");
-            }
+        [HttpPost]
+        public async Task<IActionResult> Post([FromBody] PedidoCreateDTO dto)
+        {
+            await _service.Create(dto);
+            return Created("", dto);
+        }
 
-            return Ok(new { Message = "Requisição GET em Usuario bem-sucedida." });
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            await _service.Delete(id);
+            return NoContent();
         }
     }
 }
