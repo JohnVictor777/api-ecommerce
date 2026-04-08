@@ -4,16 +4,12 @@
 
 Este projeto é uma API RESTful desenvolvida em **ASP.NET Core 10.0** com **C#** e **Entity Framework Core**, projetada para simular as funcionalidades essenciais de um sistema de e-commerce. O objetivo principal é fornecer uma base para gerenciamento de usuários, produtos, carrinhos de compra e pedidos, servindo como um estudo prático de arquitetura de software, padrões de projeto e desenvolvimento de APIs.
 
----
-
 ## Tecnologias Utilizadas
 
 *   **Backend:** ASP.NET Core 10.0, C#
 *   **ORM:** Entity Framework Core 10.0
 *   **Banco de Dados:** SQL Server (configurável via Connection String)
 *   **Documentação da API:** Swagger/OpenAPI
-
----
 
 ## Funcionalidades Implementadas
 
@@ -23,8 +19,6 @@ Atualmente, a API oferece as seguintes funcionalidades básicas:
 *   **Produtos:** Cadastro, listagem e exclusão de produtos.
 *   **Carrinhos de Compra:** Criação e listagem de carrinhos, permitindo adicionar itens.
 *   **Pedidos:** Criação e listagem de pedidos, com cálculo do valor total e status.
-
----
 
 ## Estrutura do Projeto
 
@@ -39,19 +33,6 @@ O projeto segue uma arquitetura em camadas, organizada da seguinte forma:
 *   `Middlewares/`: Inclui middlewares customizados, como o `ErrorHandlingMiddleware` para tratamento global de exceções.
 *   `Migrations/`: Contém as migrações do Entity Framework Core para o esquema do banco de dados.
 
----
-
-## 🔗 Relacionamentos principais
-
-* Um usuário possui um carrinho
-* Um carrinho possui vários itens
-* Cada item do carrinho está associado a um produto
-* Um pedido possui vários itens
-* Cada item do pedido referencia um produto
-* Um pedido possui um pagamento
-
----
-
 ## Como Rodar o Projeto
 
 Para configurar e executar o projeto localmente, siga os passos abaixo:
@@ -63,7 +44,7 @@ Para configurar e executar o projeto localmente, siga os passos abaixo:
 
 2.  **Clonar o Repositório:**
     ```bash
-    git clone <URL_DO_SEU_REPOSITORIO>
+    git clone https://github.com/JohnVictor777/api-ecommerce
     cd api-ecommerce/src/ApiEcommerce
     ```
 
@@ -79,21 +60,40 @@ Para configurar e executar o projeto localmente, siga os passos abaixo:
     dotnet run
     ```
 
-    A API estará disponível em `https://localhost:7214` (ou outra porta configurada). Você pode acessar a documentação do Swagger em `https://localhost:7214/swagger`.
----
+    A API estará disponível em `http://localhost:5088` (ou outra porta configurada). Você pode acessar a documentação do Swagger em `http://localhost:5088/swagger`.
 
-## Endpoints da API (Exemplos)
+## Endpoints da API
 
-*   `GET /api/Usuario`: Lista todos os usuários.
-*   `POST /api/Usuario`: Cria um novo usuário.
-*   `GET /api/Produto`: Lista todos os produtos.
-*   `POST /api/Produto`: Cria um novo produto.
-*   `POST /api/Carrinho`: Cria um novo carrinho de compras.
-*   `POST /api/Pedido`: Cria um novo pedido.
+*   **Carrinho**
+    *   `GET /api/Carrinho`
+    *   `POST /api/Carrinho`
+    *   `DELETE /api/Carrinho/{id}`
+*   **Pagamento**
+    *   `GET /api/Pagamento`
+*   **Pedido**
+    *   `GET /api/Pedido`
+    *   `POST /api/Pedido`
+    *   `DELETE /api/Pedido/{id}`
+*   **Produto**
+    *   `GET /api/Produto`
+    *   `POST /api/Produto`
+    *   `DELETE /api/Produto/{id}`
+*   **Usuário**
+    *   `GET /api/Usuario`
+    *   `POST /api/Usuario`
+    *   `DELETE /api/Usuario/{id}`
+
+## Esquemas (DTOs)
+
+*   `CarrinhoCriarDTO`
+*   `ItemCarrinhoCriarDTO`
+*   `ItemPedidoCriarDTO`
+*   `PedidoCriarDTO`
+*   `ProdutoCriadoDTO`
+*   `String<>f__AnonymousType9`
+*   `UsuarioCreateDTO`
 
 *(Consulte a documentação do Swagger para a lista completa de endpoints e seus contratos.)*
-
----
 
 ## Pontos de Melhoria e Próximos Passos
 
@@ -114,5 +114,124 @@ Contribuições são muito bem-vindas! Se você tiver sugestões, encontrar bugs
 ## Licença
 
 Este projeto está licenciado sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
+
+---
+
+# E-commerce API
+
+## Project Overview
+
+This project is a RESTful API developed in **ASP.NET Core 10.0** with **C#** and **Entity Framework Core**, designed to simulate the essential functionalities of an e-commerce system. The main goal is to provide a foundation for user management, products, shopping carts, and orders, serving as a practical study of software architecture, design patterns, and API development.
+
+## Technologies Used
+
+*   **Backend:** ASP.NET Core 10.0, C#
+*   **ORM:** Entity Framework Core 10.0
+*   **Database:** SQL Server (configurable via Connection String)
+*   **API Documentation:** Swagger/OpenAPI
+
+## Implemented Features
+
+Currently, the API offers the following basic functionalities:
+
+*   **Users:** User registration, listing, and deletion.
+*   **Products:** Product registration, listing, and deletion.
+*   **Shopping Carts:** Creation and listing of shopping carts, allowing items to be added.
+*   **Orders:** Creation and listing of orders, with total value calculation and status.
+
+## Project Structure
+
+The project follows a layered architecture, organized as follows:
+
+*   `Controllers/`: Manages HTTP requests and API routing.
+*   `Services/`: Contains the main business logic of the application.
+*   `Repositories/`: Abstracts the data access layer, interacting with Entity Framework Core.
+*   `Models/`: Defines the domain entities and system enums.
+*   `DTOs/`: Data Transfer Objects for API input and output, ensuring separation between the domain model and API contracts.
+*   `Data/`: Contains the `DbContext` (`ConnectionFactory`) for Entity Framework Core configuration.
+*   `Middlewares/`: Includes custom middlewares, such as `ErrorHandlingMiddleware` for global exception handling.
+*   `Migrations/`: Contains Entity Framework Core migrations for the database schema.
+
+## How to Run the Project
+
+To set up and run the project locally, follow the steps below:
+
+1.  **Prerequisites:**
+    *   .NET SDK 10.0 or higher
+    *   SQL Server (or another database compatible with Entity Framework Core)
+    *   A code editor (e.g., Visual Studio Code, Visual Studio)
+
+2.  **Clone the Repository:**
+    ```bash
+    git clone https://github.com/JohnVictor777/api-ecommerce
+    cd api-ecommerce/src/ApiEcommerce
+    ```
+
+3.  **Configure the Database:**
+    *   Open the `appsettings.Development.json` (or `appsettings.json`) file and update the `ConnectionStrings:DefaultConnection` with your SQL Server credentials.
+    *   Execute migrations to create the database and tables:
+        ```bash
+        dotnet ef database update
+        ```
+
+4.  **Run the Application:**
+    ```bash
+    dotnet run
+    ```
+
+    The API will be available at `http://localhost:5088` (or another configured port). You can access the Swagger documentation at `http://localhost:5088/swagger`.
+
+## API Endpoints
+
+*   **Cart**
+    *   `GET /api/Carrinho`
+    *   `POST /api/Carrinho`
+    *   `DELETE /api/Carrinho/{id}`
+*   **Payment**
+    *   `GET /api/Pagamento`
+*   **Order**
+    *   `GET /api/Pedido`
+    *   `POST /api/Pedido`
+    *   `DELETE /api/Pedido/{id}`
+*   **Product**
+    *   `GET /api/Produto`
+    *   `POST /api/Produto`
+    *   `DELETE /api/Produto/{id}`
+*   **User**
+    *   `GET /api/Usuario`
+    *   `POST /api/Usuario`
+    *   `DELETE /api/Usuario/{id}`
+
+## Schemas (DTOs)
+
+*   `CarrinhoCriarDTO`
+*   `ItemCarrinhoCriarDTO`
+*   `ItemPedidoCriarDTO`
+*   `PedidoCriarDTO`
+*   `ProdutoCriadoDTO`
+*   `String<>f__AnonymousType9`
+*   `UsuarioCreateDTO`
+
+*(Consult the Swagger documentation for the complete list of endpoints and their contracts.)*
+
+## Areas for Improvement and Next Steps
+
+This project is constantly evolving, and several areas have been identified for improvement and expansion. I am actively seeking feedback and collaboration from the community to enhance the following aspects:
+
+1.  **Security:** Implementation of robust password hashing (e.g., BCrypt) and integration of JWT authentication to protect endpoints and manage user sessions.
+2.  **Data Validation:** Addition of *Data Annotations* to input DTOs and implementation of more comprehensive validations to ensure the integrity of data received by the API.
+3.  **Inventory Control:** Develop the logic to check product availability in stock before order creation and deduct sold quantities.
+4.  **Payment Flow:** Full implementation of the payment module, including integration (even if simulated) with payment gateways and updating order status.
+5.  **Error Handling:** Refactoring of the `ErrorHandlingMiddleware` to return more specific HTTP *status codes* (e.g., 400 Bad Request, 404 Not Found) and use the `ProblemDetails` standard for more informative and secure error responses.
+6.  **Data Access Optimization:** Adjust repositories to include eager loading (`.Include()`) of related entities, especially for `Cart` and `Order`, to avoid *lazy loading* issues and ensure all necessary data is loaded.
+7.  **Testing:** Implementation of unit and integration tests to ensure code robustness and quality.
+
+## Contribution
+
+Contributions are very welcome! If you have suggestions, find bugs, or want to implement any of the listed improvements, feel free to open an *issue* or submit a *pull request*.
+
+## License
+
+This project is licensed under the MIT License. See the `LICENSE` file for more details.
 
 ---
