@@ -13,7 +13,7 @@ namespace ApiEcommerce.Models
         public Produto? Produto { get; set; }
         public int Quantidade { get; set; }
         public decimal PrecoUnitario { get; set; }
-
-        public Guid PedidoId { get; set; }
+        public Guid CarrinhoId { get; set; }
+        public Carrinho? Carrinho { get; set; }
     }
 }
