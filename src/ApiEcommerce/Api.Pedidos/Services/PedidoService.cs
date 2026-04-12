@@ -12,9 +12,9 @@ namespace ApiEcommerce.Services
     public class PedidoService
     {
         private readonly PedidoRepository _repository;
-        private readonly ProdutoRepositorie _produtoRepositorie;
+        private readonly ProdutoRepository _produtoRepositorie;
 
-        public PedidoService(PedidoRepository repository, ProdutoRepositorie produtoRepositorie)
+        public PedidoService(PedidoRepository repository, ProdutoRepository produtoRepositorie)
         {
             _repository = repository;
             _produtoRepositorie = produtoRepositorie;

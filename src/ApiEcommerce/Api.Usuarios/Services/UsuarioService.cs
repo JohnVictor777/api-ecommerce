@@ -10,9 +10,9 @@ namespace ApiEcommerce.Services
 {
     public class UsuarioService
     {
-        private readonly UsuarioRepositorie _repositorie;
+        private readonly UsuarioRepository _repositorie;
 
-        public UsuarioService(UsuarioRepositorie repositorie)
+        public UsuarioService(UsuarioRepository repositorie)
         {
             _repositorie = repositorie;
         }
