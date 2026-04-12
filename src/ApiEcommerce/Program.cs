@@ -1,4 +1,5 @@
 using ApiEcommerce.Data;
+using ApiEcommerce.Extensions;
 using ApiEcommerce.Repositories;
 using ApiEcommerce.Services;
 using Microsoft.EntityFrameworkCore;
@@ -9,14 +10,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<UsuarioRepository>();
-builder.Services.AddScoped<ProdutoRepository>();
-builder.Services.AddScoped<CarrinhoRepository>();
-builder.Services.AddScoped<PedidoRepository>();
-builder.Services.AddScoped<UsuarioService>();
-builder.Services.AddScoped<ProdutoService>();
-builder.Services.AddScoped<PedidoService>();
-builder.Services.AddScoped<CarrinhoService>();
+
+// Registrar as dependências do projeto
+builder.Services.AddProjectDependencies();
+
 
 // Configurar o DbContext para usar SQL Server
 builder.Services.AddDbContext<ConnectionFactory>(options =>

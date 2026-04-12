@@ -13,9 +13,9 @@ namespace ApiEcommerce.Services
     public class CarrinhoService
     {
         private readonly CarrinhoRepository _repository;
-        private readonly ProdutoRepositorie _produtoRepositorie;
+        private readonly ProdutoRepository _produtoRepositorie;
 
-        public CarrinhoService(CarrinhoRepository repository, ProdutoRepositorie produtoRepositorie)
+        public CarrinhoService(CarrinhoRepository repository, ProdutoRepository produtoRepositorie)
         {
             _repository = repository;
             _produtoRepositorie = produtoRepositorie;
