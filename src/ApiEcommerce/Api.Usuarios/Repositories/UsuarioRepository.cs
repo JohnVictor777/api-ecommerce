@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ApiEcommerce.Repositories
 {
-    public class UsuarioRepositorie
+    public class UsuarioRepository
     {
         private readonly ConnectionFactory _context;
 
-        public UsuarioRepositorie(ConnectionFactory context)
+        public UsuarioRepository(ConnectionFactory context)
         {
             _context = context;
         }
