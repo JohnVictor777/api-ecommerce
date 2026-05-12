@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ApiEcommerce.DTOs;
+using ApiEcommerce.Features.Api.Usuarios.DTOs.Update;
 using ApiEcommerce.Models;
 using ApiEcommerce.Repositories;
 
@@ -10,16 +11,16 @@ namespace ApiEcommerce.Services
 {
     public class UsuarioService
     {
-        private readonly UsuarioRepository _repositorie;
+        private readonly UsuarioRepository _repository;
 
-        public UsuarioService(UsuarioRepository repositorie)
+        public UsuarioService(UsuarioRepository repository)
         {
-            _repositorie = repositorie;
+            _repository = repository;
         }
 
         public async Task<List<UsuarioResponseDTO>> GetAll()
         {
-            var usuarios = await _repositorie.GetAll();
+            var usuarios = await _repository.GetAll();
 
             return usuarios.Select(u => new UsuarioResponseDTO
             {
@@ -29,8 +30,25 @@ namespace ApiEcommerce.Services
             }).ToList();
         }
 
+        public async Task<UsuarioResponseDTO?> GetById(Guid id)
+        {
+            var usuario = await _repository.GetById(id);
+            return usuario == null ? null : new UsuarioResponseDTO
+            {
+                Id = usuario.Id,
+                Nome = usuario.Nome,
+                Email = usuario.Email
+            };
+        }
+
         public async Task Create(UsuarioCreateDTO dto)
         {
+            if (string.IsNullOrWhiteSpace(dto.Nome))
+                throw new Exception("O nome do usuário é obrigatório");
+
+            if (dto.Email == null || !dto.Email.Contains("@"))
+                throw new Exception("O email do usuário é inválido");
+
             var usuario = new Usuario
             {
                 Id = Guid.NewGuid(),
@@ -39,12 +57,35 @@ namespace ApiEcommerce.Services
                 SenhaHash = dto.SenhaHash
             };
 
-            await _repositorie.Add(usuario);
+            await _repository.Add(usuario);
+        }
+
+        public async Task Update(Guid id, UsuarioUpdateDTO dto)
+        {
+            var usuario = await _repository.GetById(id);
+            if (usuario == null)
+                throw new Exception("Usuário não encontrado");
+
+            if (string.IsNullOrWhiteSpace(dto.Nome))
+                throw new Exception("O nome do usuário é obrigatório");
+
+            if (dto.Email == null || !dto.Email.Contains("@"))
+                throw new Exception("O email do usuário é inválido");
+
+            usuario.Nome = dto.Nome.Trim();
+            usuario.Email = dto.Email.Trim();
+            usuario.SenhaHash = dto.SenhaHash;
+
+            await _repository.Update(usuario);
         }
 
         public async Task Delete(Guid id)
         {
-            await _repositorie.Delete(id);
+            var usuario = await _repository.GetById(id);
+            if (usuario == null)
+                throw new Exception("Usuário não encontrado");
+
+            await _repository.Delete(id);
         }
     }
 }

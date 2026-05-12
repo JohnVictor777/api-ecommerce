@@ -19,15 +19,24 @@ namespace ApiEcommerce.Repositories
 
         public async Task<List<Usuario>> GetAll()
         {
-            return await _context.Usuarios.ToListAsync();
+            return await _context.Usuarios.AsNoTracking().ToListAsync();
         }
 
+        public async Task<Usuario?> GetById(Guid id)
+        {
+            return await _context.Usuarios.FirstOrDefaultAsync(u => u.Id == id);
+        }
         public async Task Add(Usuario usuario)
         {
             await _context.Usuarios.AddAsync(usuario);
             await _context.SaveChangesAsync();
         }
 
+        public async Task Update(Usuario usuario)
+        {
+            _context.Usuarios.Update(usuario);
+            await _context.SaveChangesAsync();
+        }
         public async Task Delete(Guid id)
         {
             var usuario = await _context.Usuarios.FindAsync(id);

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ApiEcommerce.Services;
 using ApiEcommerce.DTOs;
+using ApiEcommerce.Features.Api.Usuarios.DTOs.Update;
 
 namespace ApiEcommerce.Controllers
 {
@@ -28,11 +29,35 @@ namespace ApiEcommerce.Controllers
             return Ok(usuarios);
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(Guid id)
+        {
+            var usuario = await _service.GetById(id);
+            if (usuario == null)
+                return NotFound();
+
+            return Ok(usuario);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create(UsuarioCreateDTO dto)
         {
             await _service.Create(dto);
-            return Created("", dto);
+            return CreatedAtAction("", dto);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(Guid id, UsuarioUpdateDTO dto)
+        {
+            try
+            {
+                await _service.Update(id, dto);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]
