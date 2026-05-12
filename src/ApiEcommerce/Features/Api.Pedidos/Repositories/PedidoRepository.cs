@@ -21,12 +21,27 @@ namespace ApiEcommerce.Repositories
         {
             return await _context.Pedidos
                 .Include(p => p.Itens)
+                .ThenInclude(i => i.Produto)
                 .ToListAsync();
+        }
+
+        public async Task<Pedido?> GetById(Guid id)
+        {
+            return await _context.Pedidos
+                .Include(p => p.Itens)
+                .ThenInclude(i => i.Produto)
+                .FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public async Task Add(Pedido pedido)
         {
             await _context.Pedidos.AddAsync(pedido);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task Update(Pedido pedido)
+        {
+            _context.Pedidos.Update(pedido);
             await _context.SaveChangesAsync();
         }
 

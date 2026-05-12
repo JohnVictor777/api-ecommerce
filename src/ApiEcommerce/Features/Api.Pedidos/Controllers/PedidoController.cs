@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using ApiEcommerce.DTOs;
+using ApiEcommerce.Features.Api.Pedidos.DTOs.Update;
 using ApiEcommerce.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -28,11 +29,35 @@ namespace ApiEcommerce.Controllers
             return Ok(pedidos);
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(Guid id)
+        {
+            var pedido = await _service.GetById(id);
+            if (pedido == null)
+                return NotFound();
+
+            return Ok(pedido);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] PedidoCreateDTO dto)
         {
-            await _service.Create(dto);
-            return Created("", dto);
+            try
+            {
+                await _service.Create(dto);
+                return Created();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { mensagem = ex.Message });
+            }
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(Guid id, [FromBody] PedidoUpdateDTO dto)
+        {
+            await _service.Update(id, dto);
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
