@@ -54,7 +54,7 @@ namespace ApiEcommerce.Services
                 Id = Guid.NewGuid(),
                 Nome = dto.Nome,
                 Email = dto.Email,
-                SenhaHash = dto.SenhaHash
+                Senha = dto.Senha
             };
 
             await _repository.Add(usuario);
@@ -74,7 +74,7 @@ namespace ApiEcommerce.Services
 
             usuario.Nome = dto.Nome.Trim();
             usuario.Email = dto.Email.Trim();
-            usuario.SenhaHash = dto.SenhaHash;
+            usuario.Senha = dto.Senha?.Trim() ?? usuario.Senha;
 
             await _repository.Update(usuario);
         }
