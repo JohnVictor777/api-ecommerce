@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ApiEcommerce.DTOs;
+using ApiEcommerce.Features.Api.Produtos.DTOs.Update;
 using ApiEcommerce.Models;
 using ApiEcommerce.Repositories;
 
@@ -10,16 +11,16 @@ namespace ApiEcommerce.Services
 {
     public class ProdutoService
     {
-        private readonly ProdutoRepository _repositorie;
+        private readonly ProdutoRepository _repository;
 
-        public ProdutoService(ProdutoRepository repositorie)
+        public ProdutoService(ProdutoRepository repository)
         {
-            _repositorie = repositorie;
+            _repository = repository;
         }
 
         public async Task<List<ProdutoResponseDTO>> GetAll()
         {
-            var produtos = await _repositorie.GetAll();
+            var produtos = await _repository.GetAll();
 
             return produtos.Select(p => new ProdutoResponseDTO
             {
@@ -28,9 +29,24 @@ namespace ApiEcommerce.Services
                 Preco = p.Preco
             }).ToList();
         }
+        public async Task<ProdutoResponseDTO?> GetById(Guid id)
+        {
+            var produto = await _repository.GetById(id);
+            return produto == null ? null : new ProdutoResponseDTO
+            {
+                Id = produto.Id,
+                Nome = produto.Nome,
+                Preco = produto.Preco
+            };
+        }
 
         public async Task Create(ProdutoCreateDTO dto)
         {
+            if (string.IsNullOrWhiteSpace(dto.Nome))
+                throw new Exception("O nome do produto é obrigatório");
+
+            if (dto.Preco <= 0)
+                throw new Exception("O preço do produto deve ser maior que zero");
 
             var produto = new Produto
             {
@@ -39,12 +55,35 @@ namespace ApiEcommerce.Services
                 Preco = dto.Preco
             };
 
-            await _repositorie.Add(produto);
+            await _repository.Add(produto);
+        }
+
+        public async Task Update(Guid id, ProdutoUpdateDTO dto)
+        {
+            var produto = await _repository.GetById(id);
+            if (produto == null)
+                throw new Exception("Produto não encontrado");
+
+            if (string.IsNullOrWhiteSpace(dto.Nome))
+                throw new Exception("O nome do produto é obrigatório");
+
+            if (dto.Preco <= 0)
+                throw new Exception("O preço do produto deve ser maior que zero");
+
+            produto.Nome = dto.Nome.Trim();
+            produto.Preco = dto.Preco;
+
+            await _repository.Update(produto);
         }
 
         public async Task Delete(Guid id)
         {
-            await _repositorie.Delete(id);
+            var produto = await _repository.GetById(id);
+            if (produto == null)
+                throw new Exception("Produto não encontrado");
+
+            await _repository.Delete(id);
         }
+
     }
 }
