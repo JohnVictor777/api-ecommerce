@@ -49,15 +49,8 @@ namespace ApiEcommerce.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, ProdutoUpdateDTO dto)
         {
-            try
-            {
-                await _service.Update(id, dto);
-                return NoContent();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            await _service.Update(id, dto);
+            return NoContent();
         }
 
         [HttpDelete("{id}")]

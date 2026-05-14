@@ -6,6 +6,7 @@ using ApiEcommerce.DTOs;
 using ApiEcommerce.Features.Api.Produtos.DTOs.Update;
 using ApiEcommerce.Models;
 using ApiEcommerce.Repositories;
+using ApiEcommerce.Shared.Exceptions;
 
 namespace ApiEcommerce.Services
 {
@@ -42,19 +43,13 @@ namespace ApiEcommerce.Services
 
         public async Task Create(ProdutoCreateDTO dto)
         {
-            if (string.IsNullOrWhiteSpace(dto.Nome))
-                throw new Exception("O nome do produto é obrigatório");
-
-            if (dto.Preco <= 0)
-                throw new Exception("O preço do produto deve ser maior que zero");
-
             var produto = new Produto
             {
                 Id = Guid.NewGuid(),
                 Nome = dto.Nome,
-                Preco = dto.Preco
+                Preco = dto.Preco,
+                Estoque = dto.Estoque
             };
-
             await _repository.Add(produto);
         }
 
@@ -62,13 +57,7 @@ namespace ApiEcommerce.Services
         {
             var produto = await _repository.GetById(id);
             if (produto == null)
-                throw new Exception("Produto não encontrado");
-
-            if (string.IsNullOrWhiteSpace(dto.Nome))
-                throw new Exception("O nome do produto é obrigatório");
-
-            if (dto.Preco <= 0)
-                throw new Exception("O preço do produto deve ser maior que zero");
+                throw new NotFoundException("Produto não encontrado");
 
             produto.Nome = dto.Nome.Trim();
             produto.Preco = dto.Preco;
@@ -80,7 +69,7 @@ namespace ApiEcommerce.Services
         {
             var produto = await _repository.GetById(id);
             if (produto == null)
-                throw new Exception("Produto não encontrado");
+                throw new NotFoundException("Produto não encontrado");
 
             await _repository.Delete(id);
         }

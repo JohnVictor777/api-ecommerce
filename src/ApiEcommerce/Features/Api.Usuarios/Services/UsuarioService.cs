@@ -6,6 +6,7 @@ using ApiEcommerce.DTOs;
 using ApiEcommerce.Features.Api.Usuarios.DTOs.Update;
 using ApiEcommerce.Models;
 using ApiEcommerce.Repositories;
+using ApiEcommerce.Shared.Exceptions;
 
 namespace ApiEcommerce.Services
 {
@@ -43,11 +44,7 @@ namespace ApiEcommerce.Services
 
         public async Task Create(UsuarioCreateDTO dto)
         {
-            if (string.IsNullOrWhiteSpace(dto.Nome))
-                throw new Exception("O nome do usuário é obrigatório");
 
-            if (dto.Email == null || !dto.Email.Contains("@"))
-                throw new Exception("O email do usuário é inválido");
 
             var usuario = new Usuario
             {
@@ -64,13 +61,9 @@ namespace ApiEcommerce.Services
         {
             var usuario = await _repository.GetById(id);
             if (usuario == null)
-                throw new Exception("Usuário não encontrado");
+                throw new NotFoundException("Usuário não encontrado");
 
-            if (string.IsNullOrWhiteSpace(dto.Nome))
-                throw new Exception("O nome do usuário é obrigatório");
 
-            if (dto.Email == null || !dto.Email.Contains("@"))
-                throw new Exception("O email do usuário é inválido");
 
             usuario.Nome = dto.Nome.Trim();
             usuario.Email = dto.Email.Trim();
@@ -83,7 +76,7 @@ namespace ApiEcommerce.Services
         {
             var usuario = await _repository.GetById(id);
             if (usuario == null)
-                throw new Exception("Usuário não encontrado");
+                throw new NotFoundException("Usuário não encontrado");
 
             await _repository.Delete(id);
         }

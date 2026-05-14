@@ -8,10 +8,10 @@ namespace ApiEcommerce.DTOs
 {
     public class ItemPedidoCreateDTO
     {
-        [Required]
+        [Required(ErrorMessage = "O ID do produto é obrigatório.")]
         public Guid ProdutoId { get; set; }
 
-        [Range(1, 999)]
+        [Range(1, 999, ErrorMessage = "A quantidade deve ser entre 1 e 999.")]
         public int Quantidade { get; set; }
     }
 }
