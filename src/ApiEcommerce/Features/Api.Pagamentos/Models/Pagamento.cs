@@ -14,5 +14,7 @@ namespace ApiEcommerce.Models
 
         public decimal Valor { get; set; }
         public StatusPagamento Status { get; set; }
+        public DateTime CriadoEm { get; set; }
+        public DateTime? AtualizadoEm { get; set; }
     }
 }
