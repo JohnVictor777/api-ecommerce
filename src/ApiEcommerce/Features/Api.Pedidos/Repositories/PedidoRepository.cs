@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ApiEcommerce.Data;
 using ApiEcommerce.Models;
+using ApiEcommerce.Shared.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApiEcommerce.Repositories
@@ -51,7 +52,7 @@ namespace ApiEcommerce.Repositories
 
             if (pedido == null)
             {
-                throw new Exception("Pedido não encontrado");
+                throw new ApiEcommerce.Shared.Exceptions.NotFoundException("Pedido não encontrado");
             }
 
             _context.Pedidos.Remove(pedido);

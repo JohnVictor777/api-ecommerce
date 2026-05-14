@@ -71,7 +71,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseMiddleware<ApiEcommerce.Shared.Middlewares.RequestLoggingMiddleware>();
-app.UseMiddleware<ApiEcommerce.Middlewares.ErrorHandlingMiddleware>();
+app.UseMiddleware<ApiEcommerce.Shared.Middlewares.ErrorHandlingMiddleware>();
 app.MapControllers();
 app.MapGet("/health", () => new { status = "OK" });
 

@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using ApiEcommerce.Models;
 using ApiEcommerce.Features.Api.Pedidos.DTOs.Update;
 using static ApiEcommerce.Models.Enum;
+using ApiEcommerce.Shared.Exceptions;
 
 namespace ApiEcommerce.Services
 {
@@ -76,7 +77,7 @@ namespace ApiEcommerce.Services
                 var produto = await _produtoRepositorie.GetById(itemDto.ProdutoId);
 
                 if (produto == null)
-                    throw new Exception("Produto não encontrado");
+                    throw new NotFoundException("Produto não encontrado");
 
                 itens.Add(new ItemPedido
                 {
@@ -103,11 +104,11 @@ namespace ApiEcommerce.Services
         {
             var pedido = await _repository.GetById(id);
             if (pedido == null)
-                throw new KeyNotFoundException("Pedido não encontrado");
+                throw new NotFoundException("Pedido não encontrado");
 
             if (!System.Enum.IsDefined(typeof(StatusPedido), dto.Status))
             {
-                throw new Exception("Status inválido");
+                throw new ValidationException("Status inválido");
             }
 
             pedido.Status = dto.Status;

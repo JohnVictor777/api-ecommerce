@@ -42,15 +42,8 @@ namespace ApiEcommerce.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] PedidoCreateDTO dto)
         {
-            try
-            {
-                await _service.Create(dto);
-                return Created();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { mensagem = ex.Message });
-            }
+            await _service.Create(dto);
+            return Created();
         }
 
         [HttpPut("{id}")]

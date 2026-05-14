@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations;
 
-namespace ApiEcommerce.DTOs
+namespace ApiEcommerce.Features.Api.Carrinhos.DTOs.Update
 {
-    public class ItemCarrinhoCreateDTO
+    public class ItemCarrinhoUpdateDTO
     {
         [Required(ErrorMessage = "O ID do produto é obrigatório.")]
         public Guid ProdutoId { get; set; }
