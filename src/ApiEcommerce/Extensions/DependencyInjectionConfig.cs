@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ApiEcommerce.Data;
+using ApiEcommerce.Features.Api.Pagamentos.Repositories;
+using ApiEcommerce.Features.Api.Pagamentos.Services;
 using ApiEcommerce.Repositories;
 using ApiEcommerce.Services;
 using Microsoft.EntityFrameworkCore;
@@ -18,12 +20,14 @@ namespace ApiEcommerce.Extensions
             services.AddScoped<ProdutoRepository>();
             services.AddScoped<CarrinhoRepository>();
             services.AddScoped<PedidoRepository>();
+            services.AddScoped<PagamentoRepository>();
 
             // Services
             services.AddScoped<UsuarioService>();
             services.AddScoped<ProdutoService>();
             services.AddScoped<PedidoService>();
             services.AddScoped<CarrinhoService>();
+            services.AddScoped<PagamentoService>();
 
             return services;
         }

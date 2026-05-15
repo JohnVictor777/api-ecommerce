@@ -1,10 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+using ApiEcommerce.Features.Api.Pagamentos.DTOs.Create;
+using ApiEcommerce.Features.Api.Pagamentos.DTOs.Response;
+using ApiEcommerce.Features.Api.Pagamentos.DTOs.Update;
+using ApiEcommerce.Features.Api.Pagamentos.Services;
+using ApiEcommerce.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace ApiEcommerce.Controllers
 {
@@ -12,24 +11,55 @@ namespace ApiEcommerce.Controllers
     [Route("api/[controller]")]
     public class PagamentoController : ControllerBase
     {
-        private readonly ILogger<PagamentoController> _logger;
+        private readonly PagamentoService _service;
 
-        public PagamentoController(ILogger<PagamentoController> logger)
+        public PagamentoController(PagamentoService service)
         {
-            _logger = logger;
+            _service = service;
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<ActionResult<List<PagamentoResponseDTO>>> Get()
         {
-            _logger.LogInformation("Requisição GET em Pagamento.");
+            var pagamentos = await _service.GetAll();
+            return Ok(pagamentos);
+        }
 
-            if (false) // Simulando um erro
-            {
-                throw new Exception("Erro de teste");
-            }
+        [HttpGet("{id}")]
+        public async Task<ActionResult<PagamentoResponseDTO>> GetById(Guid id)
+        {
+            var pagamento = await _service.GetById(id);
+            if (pagamento == null)
+                return NotFound();
 
-            return Ok(new { Message = "Requisição GET em Usuario bem-sucedida." });
+            return Ok(pagamento);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<PagamentoResponseDTO>> Create([FromBody] PagamentoCreateDTO dto)
+        {
+            var created = await _service.Create(dto);
+            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(Guid id, [FromBody] PagamentoUpdateDTO dto)
+        {
+            var updated = await _service.Update(id, dto);
+            if (!updated)
+                return NotFound();
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var deleted = await _service.Delete(id);
+            if (!deleted)
+                return NotFound();
+
+            return NoContent();
         }
     }
 }
