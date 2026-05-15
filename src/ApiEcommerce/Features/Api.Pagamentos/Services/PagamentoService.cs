@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ApiEcommerce.Features.Api.Pagamentos.DTOs.Create;
+using ApiEcommerce.Features.Api.Pagamentos.DTOs.Response;
+using ApiEcommerce.Features.Api.Pagamentos.DTOs.Update;
 using ApiEcommerce.Features.Api.Pagamentos.Repositories;
 using ApiEcommerce.Models;
 using static ApiEcommerce.Models.Enum;
@@ -17,74 +20,62 @@ namespace ApiEcommerce.Features.Api.Pagamentos.Services
             _repository = repository;
         }
 
-        public async Task<List<Pagamento>> GetAll()
+        public async Task<List<PagamentoResponseDTO>> GetAll()
         {
-            var pagamentos = await _repository.GetAll();
-
-            return pagamentos.Select(p => new Pagamento
-            {
-                Id = p.Id,
-                Valor = p.Valor,
-                PedidoId = p.PedidoId,
-                Status = p.Status,
-                CriadoEm = p.CriadoEm,
-                AtualizadoEm = p.AtualizadoEm
-            }).ToList();
-
+            return await _repository.GetAll();
         }
 
-        public async Task<Pagamento?> GetById(Guid id)
+        public async Task<PagamentoResponseDTO?> GetById(Guid id)
         {
-            var pagamento = await _repository.GetById(id);
-            return pagamento == null ? null : new Pagamento
-            {
-                Id = pagamento.Id,
-                Valor = pagamento.Valor,
-                PedidoId = pagamento.PedidoId,
-                Status = pagamento.Status,
-                CriadoEm = pagamento.CriadoEm,
-                AtualizadoEm = pagamento.AtualizadoEm
-            };
+            return await _repository.GetById(id);
         }
 
-        public async Task Create(Pagamento pagamento)
+        public async Task<PagamentoResponseDTO> Create(PagamentoCreateDTO dto)
         {
-            var newPagamento = new Pagamento
+            var pagamento = new Pagamento
             {
                 Id = Guid.NewGuid(),
-                Valor = pagamento.Valor,
-                PedidoId = pagamento.PedidoId,
-                Status = pagamento.Status,
-                CriadoEm = pagamento.CriadoEm,
-                AtualizadoEm = pagamento.AtualizadoEm
+                PedidoId = dto.PedidoId,
+                Valor = 0,
+                Status = StatusPagamento.Pendente,
+                CriadoEm = DateTime.UtcNow
             };
 
-            await _repository.Add(newPagamento);
+            await _repository.Add(pagamento);
+            return ToDTO(pagamento);
         }
 
-        public async Task Update(Guid id, Pagamento pagamento)
+        public async Task<bool> Update(Guid id, PagamentoUpdateDTO dto)
         {
-            var existingPagamento = await _repository.GetById(id);
-            if (existingPagamento == null)
-                return;
-
-            existingPagamento.Valor = pagamento.Valor;
-            existingPagamento.PedidoId = pagamento.PedidoId;
-            existingPagamento.Status = pagamento.Status;
-            existingPagamento.CriadoEm = pagamento.CriadoEm;
-            existingPagamento.AtualizadoEm = pagamento.AtualizadoEm;
-
-            await _repository.Update(existingPagamento);
-        }
-
-        public async Task Delete(Guid id)
-        {
-            var pagamento = await _repository.GetById(id);
+            var pagamento = await _repository.GetEntityById(id);
             if (pagamento == null)
-                return;
+                return false;
+
+            pagamento.Status = dto.Status;
+            pagamento.AtualizadoEm = DateTime.UtcNow;
+
+            await _repository.Update(pagamento);
+            return true;
+        }
+
+        public async Task<bool> Delete(Guid id)
+        {
+            var pagamento = await _repository.GetEntityById(id);
+            if (pagamento == null)
+                return false;
 
             await _repository.Delete(pagamento);
-
+            return true;
         }
+
+        private static PagamentoResponseDTO ToDTO(Pagamento p) => new()
+        {
+            Id = p.Id,
+            PedidoId = p.PedidoId,
+            Valor = p.Valor,
+            Status = p.Status,
+            CriadoEm = p.CriadoEm,
+            AtualizadoEm = p.AtualizadoEm
+        };
     }
 }
