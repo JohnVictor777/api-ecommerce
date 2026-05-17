@@ -30,6 +30,7 @@ namespace ApiEcommerce.Shared.Middlewares
             }
         }
 
+        // Método para lidar com exceções e retornar respostas JSON apropriadas com base no tipo de exceção
         private static Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             context.Response.ContentType = "application/json";

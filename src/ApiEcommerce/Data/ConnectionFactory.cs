@@ -13,7 +13,7 @@ namespace ApiEcommerce.Data
         {
         }
 
-        // Defina os DbSet para cada entidade do seu modelo
+        // Define os DbSet para cada entidade do seu modelo
         public DbSet<Models.Usuario> Usuarios { get; set; }
         public DbSet<Models.Produto> Produtos { get; set; }
         public DbSet<Models.Pedido> Pedidos { get; set; }
@@ -22,7 +22,7 @@ namespace ApiEcommerce.Data
         public DbSet<Models.ItemCarrinho> ItensCarrinho { get; set; }
         public DbSet<Models.Pagamento> Pagamentos { get; set; }
 
-
+        // Configurações adicionais do modelo
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

@@ -44,8 +44,6 @@ namespace ApiEcommerce.Services
 
         public async Task Create(UsuarioCreateDTO dto)
         {
-
-
             var usuario = new Usuario
             {
                 Id = Guid.NewGuid(),
@@ -62,8 +60,6 @@ namespace ApiEcommerce.Services
             var usuario = await _repository.GetById(id);
             if (usuario == null)
                 throw new NotFoundException("Usuário não encontrado");
-
-
 
             usuario.Nome = dto.Nome.Trim();
             usuario.Email = dto.Email.Trim();

@@ -18,7 +18,6 @@ namespace ApiEcommerce.Repositories
         {
             _context = context;
         }
-
         public async Task<List<Carrinho>> GetAll()
         {
             return await _context.Carrinhos
