@@ -17,7 +17,6 @@ namespace ApiEcommerce.Repositories
         {
             _context = context;
         }
-
         public async Task<List<Pedido>> GetAll()
         {
             return await _context.Pedidos
@@ -25,7 +24,6 @@ namespace ApiEcommerce.Repositories
                 .ThenInclude(i => i.Produto)
                 .ToListAsync();
         }
-
         public async Task<Pedido?> GetById(Guid id)
         {
             return await _context.Pedidos
@@ -33,7 +31,6 @@ namespace ApiEcommerce.Repositories
                 .ThenInclude(i => i.Produto)
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
-
         public async Task Add(Pedido pedido)
         {
             await _context.Pedidos.AddAsync(pedido);
@@ -57,8 +54,6 @@ namespace ApiEcommerce.Repositories
 
             _context.Pedidos.Remove(pedido);
             await _context.SaveChangesAsync();
-
         }
-
     }
 }

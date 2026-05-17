@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ApiEcommerce.DTOs;
 using ApiEcommerce.Features.Api.Produtos.DTOs.Update;
 using ApiEcommerce.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -39,6 +40,7 @@ namespace ApiEcommerce.Controllers
             return Ok(produto);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Create(ProdutoCreateDTO dto)
         {
@@ -53,6 +55,7 @@ namespace ApiEcommerce.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {

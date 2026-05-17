@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 
 namespace ApiEcommerce.Models
 {
-    // Modelo para representar um item de pedido
     public class ItemPedido
     {
         public Guid Id { get; set; }

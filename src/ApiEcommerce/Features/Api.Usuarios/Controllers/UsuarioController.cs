@@ -8,9 +8,11 @@ using Microsoft.Extensions.Logging;
 using ApiEcommerce.Services;
 using ApiEcommerce.DTOs;
 using ApiEcommerce.Features.Api.Usuarios.DTOs.Update;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ApiEcommerce.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class UsuarioController : ControllerBase

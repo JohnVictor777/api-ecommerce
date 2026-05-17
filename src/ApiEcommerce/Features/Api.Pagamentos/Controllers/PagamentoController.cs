@@ -3,10 +3,12 @@ using ApiEcommerce.Features.Api.Pagamentos.DTOs.Response;
 using ApiEcommerce.Features.Api.Pagamentos.DTOs.Update;
 using ApiEcommerce.Features.Api.Pagamentos.Services;
 using ApiEcommerce.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiEcommerce.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class PagamentoController : ControllerBase
