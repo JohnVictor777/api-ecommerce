@@ -11,7 +11,7 @@ using static ApiEcommerce.Models.Enum;
 
 namespace ApiEcommerce.Features.Api.Pagamentos.Services
 {
-    public class PagamentoService
+    public class PagamentoService : IPagamentoService
     {
         private readonly PagamentoRepository _repository;
 
@@ -64,7 +64,7 @@ namespace ApiEcommerce.Features.Api.Pagamentos.Services
             if (pagamento == null)
                 return false;
 
-            await _repository.Delete(pagamento);
+            await _repository.Delete(id);
             return true;
         }
 

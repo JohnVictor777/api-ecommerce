@@ -6,10 +6,12 @@ using ApiEcommerce.Data;
 using ApiEcommerce.Features.Api.Pagamentos.DTOs.Response;
 using ApiEcommerce.Models;
 using Microsoft.EntityFrameworkCore;
+using ApiEcommerce.Features.Api.Pagamentos.Services;
+using ApiEcommerce.Shared.Exceptions;
 
 namespace ApiEcommerce.Features.Api.Pagamentos.Repositories
 {
-    public class PagamentoRepository
+    public class PagamentoRepository : IPagamentoRepository
     {
 
         private readonly ConnectionFactory _context;
@@ -70,8 +72,11 @@ namespace ApiEcommerce.Features.Api.Pagamentos.Repositories
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public async Task Delete(Pagamento pagamento)
+        public async Task Delete(Guid id)
         {
+            var pagamento = await GetEntityById(id);
+            if (pagamento == null)
+                throw new NotFoundException("Pagamento não encontrado");
             _context.Pagamentos.Remove(pagamento);
             await _context.SaveChangesAsync();
         }
