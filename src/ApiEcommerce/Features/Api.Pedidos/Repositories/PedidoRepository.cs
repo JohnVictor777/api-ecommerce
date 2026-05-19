@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ApiEcommerce.Data;
+using ApiEcommerce.Features.Api.Pedidos.Repositories;
 using ApiEcommerce.Models;
 using ApiEcommerce.Shared.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApiEcommerce.Repositories
 {
-    public class PedidoRepository
+    public class PedidoRepository : IPedidoRepository
     {
         private readonly ConnectionFactory _context;
 

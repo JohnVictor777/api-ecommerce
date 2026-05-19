@@ -8,10 +8,11 @@ using ApiEcommerce.Models;
 using ApiEcommerce.Features.Api.Pedidos.DTOs.Update;
 using static ApiEcommerce.Models.Enum;
 using ApiEcommerce.Shared.Exceptions;
+using ApiEcommerce.Features.Api.Pedidos.Services;
 
 namespace ApiEcommerce.Services
 {
-    public class PedidoService
+    public class PedidoService : IPedidoService
     {
         private readonly PedidoRepository _repository;
         private readonly ProdutoRepository _produtoRepositorie;
