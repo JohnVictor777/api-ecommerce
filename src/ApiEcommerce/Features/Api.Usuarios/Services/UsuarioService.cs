@@ -4,13 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using ApiEcommerce.DTOs;
 using ApiEcommerce.Features.Api.Usuarios.DTOs.Update;
+using ApiEcommerce.Features.Api.Usuarios.Services;
 using ApiEcommerce.Models;
 using ApiEcommerce.Repositories;
 using ApiEcommerce.Shared.Exceptions;
 
 namespace ApiEcommerce.Services
 {
-    public class UsuarioService
+    public class UsuarioService : IUsuarioService
     {
         private readonly UsuarioRepository _repository;
 
