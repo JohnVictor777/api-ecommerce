@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ApiEcommerce.Data;
+using ApiEcommerce.Features.Api.Produtos.Repositories;
 using ApiEcommerce.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApiEcommerce.Repositories
 {
-    public class ProdutoRepository
+    public class ProdutoRepository : IProdutoRepository
     {
         private readonly ConnectionFactory _context;
 
