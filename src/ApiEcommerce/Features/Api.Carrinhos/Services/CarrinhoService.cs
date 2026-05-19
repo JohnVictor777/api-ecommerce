@@ -8,11 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using ApiEcommerce.Models;
 using ApiEcommerce.Features.Api.Carrinhos.DTOs.Update;
 using ApiEcommerce.Shared.Exceptions;
+using ApiEcommerce.Features.Api.Carrinhos.Services;
 
 
 namespace ApiEcommerce.Services
 {
-    public class CarrinhoService
+    public class CarrinhoService : ICarrinhoService
     {
         private readonly CarrinhoRepository _repository;
         private readonly ProdutoRepository _produtoRepository;

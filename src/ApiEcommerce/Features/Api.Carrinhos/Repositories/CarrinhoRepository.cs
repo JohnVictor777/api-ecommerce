@@ -6,11 +6,12 @@ using ApiEcommerce.Shared.Exceptions;
 using ApiEcommerce.Data;
 using ApiEcommerce.Models;
 using Microsoft.EntityFrameworkCore;
+using ApiEcommerce.Features.Api.Carrinhos.Repositories;
 
 
 namespace ApiEcommerce.Repositories
 {
-    public class CarrinhoRepository
+    public class CarrinhoRepository : ICarrinhoRepository
     {
         private readonly ConnectionFactory _context;
 
