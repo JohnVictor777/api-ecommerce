@@ -9,16 +9,18 @@ using ApiEcommerce.Models;
 using ApiEcommerce.Features.Api.Carrinhos.DTOs.Update;
 using ApiEcommerce.Shared.Exceptions;
 using ApiEcommerce.Features.Api.Carrinhos.Services;
+using ApiEcommerce.Features.Api.Carrinhos.Repositories;
+using ApiEcommerce.Features.Api.Produtos.Repositories;
 
 
 namespace ApiEcommerce.Services
 {
     public class CarrinhoService : ICarrinhoService
     {
-        private readonly CarrinhoRepository _repository;
-        private readonly ProdutoRepository _produtoRepository;
+        private readonly ICarrinhoRepository _repository;
+        private readonly IProdutoRepository _produtoRepository;
 
-        public CarrinhoService(CarrinhoRepository repository, ProdutoRepository produtoRepository)
+        public CarrinhoService(ICarrinhoRepository repository, IProdutoRepository produtoRepository)
         {
             _repository = repository;
             _produtoRepository = produtoRepository;

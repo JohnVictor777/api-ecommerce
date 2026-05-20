@@ -9,15 +9,17 @@ using ApiEcommerce.Features.Api.Pedidos.DTOs.Update;
 using static ApiEcommerce.Models.Enum;
 using ApiEcommerce.Shared.Exceptions;
 using ApiEcommerce.Features.Api.Pedidos.Services;
+using ApiEcommerce.Features.Api.Pedidos.Repositories;
+using ApiEcommerce.Features.Api.Produtos.Repositories;
 
 namespace ApiEcommerce.Services
 {
     public class PedidoService : IPedidoService
     {
-        private readonly PedidoRepository _repository;
-        private readonly ProdutoRepository _produtoRepositorie;
+        private readonly IPedidoRepository _repository;
+        private readonly IProdutoRepository _produtoRepositorie;
 
-        public PedidoService(PedidoRepository repository, ProdutoRepository produtoRepositorie)
+        public PedidoService(IPedidoRepository repository, IProdutoRepository produtoRepositorie)
         {
             _repository = repository;
             _produtoRepositorie = produtoRepositorie;
