@@ -13,9 +13,9 @@ namespace ApiEcommerce.Features.Api.Pagamentos.Services
 {
     public class PagamentoService : IPagamentoService
     {
-        private readonly PagamentoRepository _repository;
+        private readonly IPagamentoRepository _repository;
 
-        public PagamentoService(PagamentoRepository repository)
+        public PagamentoService(IPagamentoRepository repository)
         {
             _repository = repository;
         }
@@ -47,12 +47,19 @@ namespace ApiEcommerce.Features.Api.Pagamentos.Services
 
         public async Task<bool> Update(Guid id, PagamentoUpdateDTO dto)
         {
-            var pagamento = await _repository.GetEntityById(id);
-            if (pagamento == null)
+            var existing = await _repository.GetById(id);
+            if (existing == null)
                 return false;
 
-            pagamento.Status = dto.Status;
-            pagamento.AtualizadoEm = DateTime.UtcNow;
+            var pagamento = new Pagamento
+            {
+                Id = existing.Id,
+                PedidoId = existing.PedidoId,
+                Valor = existing.Valor,
+                Status = dto.Status,
+                CriadoEm = existing.CriadoEm,
+                AtualizadoEm = DateTime.UtcNow
+            };
 
             await _repository.Update(pagamento);
             return true;
@@ -60,7 +67,7 @@ namespace ApiEcommerce.Features.Api.Pagamentos.Services
 
         public async Task<bool> Delete(Guid id)
         {
-            var pagamento = await _repository.GetEntityById(id);
+            var pagamento = await _repository.GetById(id);
             if (pagamento == null)
                 return false;
 

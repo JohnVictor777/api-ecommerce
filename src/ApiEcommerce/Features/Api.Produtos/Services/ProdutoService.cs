@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ApiEcommerce.DTOs;
 using ApiEcommerce.Features.Api.Produtos.DTOs.Update;
+using ApiEcommerce.Features.Api.Produtos.Repositories;
 using ApiEcommerce.Features.Api.Produtos.Services;
 using ApiEcommerce.Models;
 using ApiEcommerce.Repositories;
@@ -13,9 +14,9 @@ namespace ApiEcommerce.Services
 {
     public class ProdutoService : IProdutoService
     {
-        private readonly ProdutoRepository _repository;
+        private readonly IProdutoRepository _repository;
 
-        public ProdutoService(ProdutoRepository repository)
+        public ProdutoService(IProdutoRepository repository)
         {
             _repository = repository;
         }
