@@ -1,13 +1,25 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using ApiEcommerce.Data;
+
+using ApiEcommerce.Features.Api.Usuarios.Repositories;
+using ApiEcommerce.Features.Api.Usuarios.Services;
+
+using ApiEcommerce.Features.Api.Produtos.Repositories;
+using ApiEcommerce.Features.Api.Produtos.Services;
+
+using ApiEcommerce.Features.Api.Carrinhos.Repositories;
+using ApiEcommerce.Features.Api.Carrinhos.Services;
+
+using ApiEcommerce.Features.Api.Pedidos.Repositories;
+using ApiEcommerce.Features.Api.Pedidos.Services;
+
 using ApiEcommerce.Features.Api.Pagamentos.Repositories;
 using ApiEcommerce.Features.Api.Pagamentos.Services;
+
 using ApiEcommerce.Repositories;
 using ApiEcommerce.Services;
+
 using Microsoft.EntityFrameworkCore;
+
 
 namespace ApiEcommerce.Extensions
 {
@@ -16,18 +28,18 @@ namespace ApiEcommerce.Extensions
         public static IServiceCollection AddProjectDependencies(this IServiceCollection services)
         {
             // Repositories
-            services.AddScoped<UsuarioRepository>();
-            services.AddScoped<ProdutoRepository>();
-            services.AddScoped<CarrinhoRepository>();
-            services.AddScoped<PedidoRepository>();
-            services.AddScoped<PagamentoRepository>();
+            services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+            services.AddScoped<IProdutoRepository, ProdutoRepository>();
+            services.AddScoped<ICarrinhoRepository, CarrinhoRepository>();
+            services.AddScoped<IPedidoRepository, PedidoRepository>();
+            services.AddScoped<IPagamentoRepository, PagamentoRepository>();
 
             // Services
-            services.AddScoped<UsuarioService>();
-            services.AddScoped<ProdutoService>();
-            services.AddScoped<PedidoService>();
-            services.AddScoped<CarrinhoService>();
-            services.AddScoped<PagamentoService>();
+            services.AddScoped<IUsuarioService, UsuarioService>();
+            services.AddScoped<IProdutoService, ProdutoService>();
+            services.AddScoped<IPedidoService, PedidoService>();
+            services.AddScoped<ICarrinhoService, CarrinhoService>();
+            services.AddScoped<IPagamentoService, PagamentoService>();
 
             return services;
         }
