@@ -9,8 +9,12 @@ using Serilog.Sinks.MSSqlServer;
 using ApiEcommerce.Services;
 using Microsoft.IdentityModel.Tokens;
 using ApiEcommerce;
+using dotenv.net;
 
+DotEnv.Load();
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration.AddEnvironmentVariables();
 
 #region Configurar o Serilog para logging
 builder.Services.AddSwaggerGen(c =>
