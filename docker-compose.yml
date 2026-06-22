@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver_db
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=SENHA_REMOVIDA
+      - MSSQL_PID=Developer
+    ports:
+      - "1433:1433"
+    networks:
+      - ecommerce-network
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: api_ecommerce
+    depends_on:
+      - db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__DefaultConnection=Server=db;Database=ApiEcommerce;User Id=sa;Password=SENHA_REMOVIDA;TrustServerCertificate=True;
+      - Jwt__Key=MinhaChaveSecretaSuperSeguraComPeloMenos32Caracteres!
+      - Jwt__Issuer=ApiEcommerce
+      - Jwt__Audience=ApiEcommerce
+    ports:
+      - "5000:8080"
+    networks:
+      - ecommerce-network
+
+networks:
+  ecommerce-network:
+    driver: bridge
