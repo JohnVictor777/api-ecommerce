@@ -268,7 +268,7 @@ Para acessar endpoints protegidos:
 - [x] JWT Authentication
 - [x] Serilog (Console, File, SQL Server)
 - [x] Testes unitários — estrutura criada e organizada por Feature
-- [ ] Docker — containerização da API e do banco de dados
+- [x] Docker — containerização da API e do banco de dados
 - [ ] Deploy — publicação em ambiente de produção (Azure / Railway / Render)
 - [ ] GitHub Actions — CI/CD automatizado
 - [ ] Validação Avançada com FluentValidation
@@ -277,6 +277,37 @@ Para acessar endpoints protegidos:
 ### Arquitetura
 - [ ] CQRS
 - [ ] Mensageria com RabbitMQ/Kafka
+
+---
+
+## 🐳 Como rodar com Docker
+
+Para facilitar o desenvolvimento e a execução da API, este projeto conta com suporte ao Docker.
+
+### Pré-requisitos
+- [Docker](https://www.docker.com/get-started)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+
+### Passo a Passo
+
+1. **Clone o repositório:**
+   ```bash
+   git clone https://github.com/JohnVictor777/api-ecommerce.git
+   cd api-ecommerce
+   ```
+
+2. **Suba os containers:**
+   ```bash
+   docker-compose up -d
+   ```
+   Este comando irá baixar as imagens necessárias, configurar o SQL Server e subir a API.
+
+3. **Acesse a API:**
+   A API estará disponível em `http://localhost:5000`.
+   Você pode acessar o Swagger em `http://localhost:5000/swagger/index.html`.
+
+4. **Variáveis de Ambiente:**
+   As configurações padrão do Docker estão no arquivo `docker-compose.yml`. Para produção, recomenda-se o uso de um arquivo `.env` ou segredos do Docker.
 
 ---
 
