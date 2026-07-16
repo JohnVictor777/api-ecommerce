@@ -109,11 +109,11 @@ Log.Logger = new LoggerConfiguration()
         rollingInterval: RollingInterval.Day,
         outputTemplate: outputTemplate
         )
-    .WriteTo.MSSqlServer(
+  .WriteTo.MSSqlServer(
         connectionString: builder.Configuration.GetConnectionString("DefaultConnection"),
         sinkOptions: sinKOptions,
         columnOptions: columnOptions
-    )
+   )
     .Enrich.FromLogContext()
     .CreateLogger();
 
