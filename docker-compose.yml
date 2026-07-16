@@ -1,12 +1,10 @@
-version: '3.8'
-
 services:
   db:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: sqlserver_db
     environment:
       - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=SENHA_REMOVIDA
+      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
       - MSSQL_PID=Developer
     ports:
       - "1433:1433"
@@ -23,10 +21,11 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:8080
-      - ConnectionStrings__DefaultConnection=Server=db;Database=ApiEcommerce;User Id=sa;Password=SENHA_REMOVIDA;TrustServerCertificate=True;
-      - Jwt__Key=MinhaChaveSecretaSuperSeguraComPeloMenos32Caracteres!
+      - ConnectionStrings__DefaultConnection=Server=db;Database=ApiEcommerce;User Id=sa;Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True;
+      - Jwt__Key=${JWT_KEY}
       - Jwt__Issuer=ApiEcommerce
       - Jwt__Audience=ApiEcommerce
+      - Jwt__ExpireMinutes=60
     ports:
       - "5000:8080"
     networks:
@@ -35,3 +34,4 @@ services:
 networks:
   ecommerce-network:
     driver: bridge
+

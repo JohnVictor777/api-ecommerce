@@ -11,7 +11,7 @@ namespace ApiEcommerce.Features.Api.Usuarios.Services
     {
         Task<List<UsuarioResponseDTO>> GetAll();
         Task<UsuarioResponseDTO?> GetById(Guid id);
-        Task Create(UsuarioCreateDTO usuario);
+        Task<UsuarioResponseDTO> Create(UsuarioCreateDTO usuario);
         Task Update(Guid id, UsuarioUpdateDTO usuario);
         Task Delete(Guid id);
     }

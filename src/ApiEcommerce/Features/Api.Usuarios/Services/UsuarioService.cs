@@ -44,7 +44,7 @@ namespace ApiEcommerce.Services
             };
         }
 
-        public async Task Create(UsuarioCreateDTO dto)
+        public async Task<UsuarioResponseDTO> Create(UsuarioCreateDTO dto)
         {
             var usuario = new Usuario
             {
@@ -52,9 +52,16 @@ namespace ApiEcommerce.Services
                 Nome = dto.Nome,
                 Email = dto.Email,
                 Senha = dto.Senha
-            };
+                };
 
             await _repository.Add(usuario);
+
+            return new UsuarioResponseDTO
+            {
+                Id = usuario.Id,
+                Nome = usuario.Nome,
+                Email = usuario.Email
+            };
         }
 
         public async Task Update(Guid id, UsuarioUpdateDTO dto)

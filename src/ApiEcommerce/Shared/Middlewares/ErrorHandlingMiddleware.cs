@@ -6,16 +6,19 @@ using System.Threading.Tasks;
 using ApiEcommerce.Shared.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace ApiEcommerce.Shared.Middlewares
 {
     public class ErrorHandlingMiddleware
     {
         private readonly RequestDelegate _nextDelegate;
+        private readonly ILogger<ErrorHandlingMiddleware> _logger;
 
-        public ErrorHandlingMiddleware(RequestDelegate next)
+        public ErrorHandlingMiddleware(RequestDelegate next, ILogger<ErrorHandlingMiddleware> logger)
         {
             _nextDelegate = next;
+            _logger = logger;
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -26,6 +29,7 @@ namespace ApiEcommerce.Shared.Middlewares
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Exceção não tratada em {Path}", context.Request.Path);
                 await HandleExceptionAsync(context, ex);
             }
         }
