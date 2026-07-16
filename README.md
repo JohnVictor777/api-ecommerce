@@ -16,7 +16,7 @@ O principal objetivo ao desenvolver esta API foi criar uma base robusta e extens
 
 A API já oferece um conjunto de funcionalidades essenciais para um e-commerce:
 
-- **Autenticação e Autorização JWT:** Proteção de endpoints sensíveis utilizando JSON Web Tokens, com suporte a perfis de acesso (Roles).
+- **Autenticação e Autorização JWT:** Proteção de endpoints sensíveis utilizando JSON Web Tokens, com suporte a perfis de acesso (Roles). *(veja a nota sobre o estado atual do login na seção "Segurança e Autenticação")*
 
 - **Gerenciamento de Produtos:** Operações CRUD completas para produtos, incluindo atributos como nome, preço e controle de estoque.
 
@@ -72,6 +72,10 @@ Toda a configuração de serviços é feita em `Extensions/DependencyInjectionCo
 
 A aplicação utiliza **Serilog** para logging estruturado, configurado para registrar eventos em console, arquivos e SQL Server. Isso permite um monitoramento eficaz e facilita a identificação de problemas em produção.
 
+### Configuração via Variáveis de Ambiente
+
+O projeto usa `dotenv.net` para carregar um arquivo `.env` local (não versionado) somado a `AddEnvironmentVariables()`. Isso vale tanto para rodar via `dotnet run` direto no host quanto para o `docker-compose.yml` — os dois cenários lêem as mesmas chaves de configuração (`ConnectionStrings__DefaultConnection`, `Jwt__Key`, etc.), só que de arquivos `.env` diferentes (veja a seção "Como Executar Localmente").
+
 ---
 
 ## Testes Automatizados
@@ -111,11 +115,14 @@ dotnet test
 - Entity Framework Core
 
 **Banco de Dados:**
-- SQL Server
+- SQL Server (containerizado via Docker)
 
 **Segurança:**
 - JWT (JSON Web Token)
 - BCrypt.Net
+
+**Configuração:**
+- dotenv.net (variáveis de ambiente via `.env`)
 
 **Documentação:**
 - Swagger/OpenAPI com suporte a Auth Bearer
@@ -208,7 +215,7 @@ Api.Carrinhos/
 
 **Pré-requisitos**
 - .NET SDK
-- SQL Server
+- SQL Server (local ou via Docker — veja a seção "Como rodar com Docker")
 - Um editor de código (Visual Studio, VS Code, Rider)
 
 **Passos**
@@ -220,20 +227,30 @@ git clone https://github.com/JohnVictor777/api-ecommerce.git
 cd api-ecommerce/src/ApiEcommerce
 ```
 
-Configuração de Segurança (JWT):
+Configuração de variáveis de ambiente — crie um arquivo `.env` **dentro de `src/ApiEcommerce/`** (não versionado, já ignorado pelo `.gitignore`):
 
-```bash
-dotnet user-secrets init
-dotnet user-secrets set "Jwt:Key" "SUA_CHAVE_SECRETA_32_CHARS"
-dotnet user-secrets set "Jwt:Issuer" "ApiEcommerce"
-dotnet user-secrets set "Jwt:Audience" "EcommerceClient"
-dotnet user-secrets set "Jwt:ExpireMinutes" "60"
+```
+Jwt__Key="uma-chave-aleatoria-com-pelo-menos-32-caracteres"
+Jwt__Issuer="ApiEcommerce"
+Jwt__Audience="ApiEcommerce"
+Jwt__ExpireMinutes=60
+ConnectionStrings__DefaultConnection="Server=localhost;Database=ApiEcommerce;User Id=sa;Password=SUA_SENHA_AQUI;TrustServerCertificate=True;"
+ASPNETCORE_ENVIRONMENT=Development
 ```
 
-Configure o Banco de Dados — atualize a `DefaultConnection` no `appsettings.json` e execute:
+> ⚠️ **Importante:** a connection string precisa usar autenticação SQL (`User Id=sa;Password=...`), não `Trusted_Connection=True` (autenticação integrada do Windows). O container de SQL Server rodando em Linux via Docker só aceita autenticação SQL — `Trusted_Connection=True` não funciona nesse cenário e vai gerar erro de conexão.
+>
+> Pra gerar uma chave JWT segura, use: `openssl rand -base64 32`
+
+Configure o Banco de Dados:
 
 ```bash
 dotnet ef database update
+```
+
+Se o comando não for reconhecido, instale a ferramenta global primeiro:
+```bash
+dotnet tool install --global dotnet-ef
 ```
 
 Execute a Aplicação:
@@ -260,15 +277,18 @@ Para acessar endpoints protegidos:
 2. Copie o Token JWT retornado
 3. No Swagger, clique em **Authorize** e insira: `Bearer SEU_TOKEN`
 
+> 🚧 **Estado atual do login:** o endpoint `/api/Auth/login` ainda está em desenvolvimento — atualmente ele gera um token JWT válido sem validar usuário ou senha reais. Ele existe para permitir testar o restante do pipeline de autenticação (geração de token, validação de assinatura, proteção de rotas com `[Authorize]`) enquanto a lógica de autenticação real (verificação de credenciais contra o banco, hash de senha) ainda não foi conectada a esse endpoint.
+
 ---
 
 ## Roadmap (Próximos Passos)
 
 ### Infraestrutura
-- [x] JWT Authentication
+- [x] JWT Authentication (geração e validação de token)
 - [x] Serilog (Console, File, SQL Server)
 - [x] Testes unitários — estrutura criada e organizada por Feature
 - [x] Docker — containerização da API e do banco de dados
+- [ ] Login real — validar usuário e senha contra o banco de dados
 - [ ] Deploy — publicação em ambiente de produção (Azure / Railway / Render)
 - [ ] GitHub Actions — CI/CD automatizado
 - [ ] Validação Avançada com FluentValidation
@@ -286,7 +306,7 @@ Para facilitar o desenvolvimento e a execução da API, este projeto conta com s
 
 ### Pré-requisitos
 - [Docker](https://www.docker.com/get-started)
-- [Docker Compose](https://docs.docker.com/compose/install/)
+- Docker Compose V2 (plugin `docker compose`, incluso nas instalações recentes do Docker Engine — **não** confundir com o binário legado `docker-compose`, que está descontinuado e pode falhar em sistemas com Python 3.12+)
 
 ### Passo a Passo
 
@@ -296,18 +316,23 @@ Para facilitar o desenvolvimento e a execução da API, este projeto conta com s
    cd api-ecommerce
    ```
 
-2. **Suba os containers:**
+2. **Configure as variáveis de ambiente:** crie um arquivo `.env` na raiz do repositório (mesma pasta do `docker-compose.yml`):
+   ```
+   MSSQL_SA_PASSWORD=EscolhaUmaSenhaForte!2026
+   JWT_KEY=uma-chave-aleatoria-com-pelo-menos-32-caracteres
+   ```
+
+3. **Suba os containers:**
    ```bash
-   docker-compose up -d
+   docker compose up -d
    ```
    Este comando irá baixar as imagens necessárias, configurar o SQL Server e subir a API.
 
-3. **Acesse a API:**
+4. **Acesse a API:**
    A API estará disponível em `http://localhost:5000`.
    Você pode acessar o Swagger em `http://localhost:5000/swagger/index.html`.
 
-4. **Variáveis de Ambiente:**
-   As configurações padrão do Docker estão no arquivo `docker-compose.yml`. Para produção, recomenda-se o uso de um arquivo `.env` ou segredos do Docker.
+5. **Rodar as migrations dentro do ambiente Docker:** se for a primeira vez subindo o banco, aplique as migrations apontando pro container (`Server=localhost,1433` a partir do host, já que a porta 1433 está mapeada).
 
 ---
 
