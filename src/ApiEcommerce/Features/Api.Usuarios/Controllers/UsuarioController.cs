@@ -9,6 +9,7 @@ using ApiEcommerce.Services;
 using ApiEcommerce.DTOs;
 using ApiEcommerce.Features.Api.Usuarios.DTOs.Update;
 using Microsoft.AspNetCore.Authorization;
+using ApiEcommerce.Features.Api.Usuarios.Services;
 
 namespace ApiEcommerce.Controllers
 {
@@ -17,9 +18,9 @@ namespace ApiEcommerce.Controllers
     [Route("api/[controller]")]
     public class UsuarioController : ControllerBase
     {
-        private readonly UsuarioService _service;
+        private readonly IUsuarioService _service;
 
-        public UsuarioController(UsuarioService service)
+        public UsuarioController(IUsuarioService service)
         {
             _service = service;
         }
@@ -44,9 +45,10 @@ namespace ApiEcommerce.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(UsuarioCreateDTO dto)
         {
-            await _service.Create(dto);
-            return CreatedAtAction("", dto);
+            var usuario = await _service.Create(dto);
+            return CreatedAtAction(nameof(GetById), new { id = usuario.Id }, usuario);
         }
+
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, UsuarioUpdateDTO dto)
