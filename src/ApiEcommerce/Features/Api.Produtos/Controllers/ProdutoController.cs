@@ -9,6 +9,7 @@ using ApiEcommerce.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using ApiEcommerce.Features.Api.Produtos.Services;
 
 namespace ApiEcommerce.Controllers
 {
@@ -16,9 +17,9 @@ namespace ApiEcommerce.Controllers
     [Route("api/[controller]")]
     public class ProdutoController : ControllerBase
     {
-        private readonly ProdutoService _service;
+        private readonly IProdutoService _service;
 
-        public ProdutoController(ProdutoService service)
+        public ProdutoController(IProdutoService service)
         {
             _service = service;
         }

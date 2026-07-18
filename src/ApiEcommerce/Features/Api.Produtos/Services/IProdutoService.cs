@@ -11,7 +11,7 @@ namespace ApiEcommerce.Features.Api.Produtos.Services
     {
         Task<List<ProdutoResponseDTO>> GetAll();
         Task<ProdutoResponseDTO?> GetById(Guid id);
-        Task Create(ProdutoCreateDTO dto);
+        Task<ProdutoResponseDTO> Create(ProdutoCreateDTO dto);
         Task Update(Guid id, ProdutoUpdateDTO dto);
         Task Delete(Guid id);
     }

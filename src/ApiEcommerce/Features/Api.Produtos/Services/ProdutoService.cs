@@ -43,7 +43,7 @@ namespace ApiEcommerce.Services
             };
         }
 
-        public async Task Create(ProdutoCreateDTO dto)
+        public async Task<ProdutoResponseDTO> Create(ProdutoCreateDTO dto)
         {
             var produto = new Produto
             {
@@ -53,6 +53,12 @@ namespace ApiEcommerce.Services
                 Estoque = dto.Estoque
             };
             await _repository.Add(produto);
+
+            return new ProdutoResponseDTO{
+                Id = produto.Id,
+                Nome = produto.Nome,
+                Preco = produto.Preco
+            };
         }
 
         public async Task Update(Guid id, ProdutoUpdateDTO dto)
