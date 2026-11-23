@@ -1,5 +1,6 @@
 using System.Data;
 using System.Text;
+using ApiEcommerce.Data;
 using ApiEcommerce.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +17,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddEnvironmentVariables();
 
-#region Configurar o Serilog para logging
+#region Configurar o Swagger
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "ApiEcommerce", Version = "v1" });
@@ -76,13 +77,28 @@ builder.Services.AddScoped<TokenService>();
 // Adiciona os serviços de controladores, Swagger e as dependências do projeto
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 // Adiciona as dependências do projeto e a infraestrutura, incluindo o DbContext e os repositórios
 builder.Services.AddProjectDependencies();
 
 // Configura a infraestrutura, incluindo o DbContext e os repositórios
 builder.Services.AddInfrastructure(builder.Configuration);
+#endregion
+
+#region Aplicar migrations pendentes
+// O sink do Serilog para SQL Server exige que o banco já exista, então as migrations rodam antes dele.
+// Em design-time (dotnet ef) nada é aplicado automaticamente.
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+if (!EF.IsDesignTime)
+{
+    var dbOptions = new DbContextOptionsBuilder<ConnectionFactory>()
+        .UseSqlServer(connectionString)
+        .Options;
+
+    using var dbContext = new ConnectionFactory(dbOptions);
+    dbContext.Database.Migrate();
+}
 #endregion
 
 #region Configurar o Serilog para logging
@@ -101,7 +117,7 @@ columnOptions.Store.Remove(StandardColumn.Properties);
 columnOptions.LogEvent.DataLength = 4000;
 columnOptions.Id.DataType = SqlDbType.BigInt;
 
-Log.Logger = new LoggerConfiguration()
+var loggerConfiguration = new LoggerConfiguration()
     .MinimumLevel.Information()
     .WriteTo.Console(outputTemplate: outputTemplate)
     .WriteTo.File(
@@ -109,13 +125,18 @@ Log.Logger = new LoggerConfiguration()
         rollingInterval: RollingInterval.Day,
         outputTemplate: outputTemplate
         )
-  .WriteTo.MSSqlServer(
-        connectionString: builder.Configuration.GetConnectionString("DefaultConnection"),
+    .Enrich.FromLogContext();
+
+if (!EF.IsDesignTime)
+{
+    loggerConfiguration.WriteTo.MSSqlServer(
+        connectionString: connectionString,
         sinkOptions: sinKOptions,
         columnOptions: columnOptions
-   )
-    .Enrich.FromLogContext()
-    .CreateLogger();
+    );
+}
+
+Log.Logger = loggerConfiguration.CreateLogger();
 
 builder.Host.UseSerilog();
 #endregion
@@ -129,11 +150,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<ApiEcommerce.Shared.Middlewares.RequestLoggingMiddleware>();
+app.UseMiddleware<ApiEcommerce.Shared.Middlewares.ErrorHandlingMiddleware>();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseMiddleware<ApiEcommerce.Shared.Middlewares.RequestLoggingMiddleware>();
-app.UseMiddleware<ApiEcommerce.Shared.Middlewares.ErrorHandlingMiddleware>();
 app.MapControllers();
 app.MapGet("/health", () => new { status = "OK" });
 

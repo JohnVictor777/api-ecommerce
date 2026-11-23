@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ApiEcommerce.DTOs;
 using ApiEcommerce.Features.Api.Carrinhos.DTOs.Update;
-using ApiEcommerce.Services;
+using ApiEcommerce.Features.Api.Carrinhos.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -17,9 +17,9 @@ namespace ApiEcommerce.Controllers
     [Route("api/[controller]")]
     public class CarrinhoController : ControllerBase
     {
-        private readonly CarrinhoService _service;
+        private readonly ICarrinhoService _service;
 
-        public CarrinhoController(CarrinhoService service)
+        public CarrinhoController(ICarrinhoService service)
         {
             _service = service;
         }

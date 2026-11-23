@@ -13,9 +13,9 @@ namespace ApiEcommerce.Controllers
     [Route("api/[controller]")]
     public class PagamentoController : ControllerBase
     {
-        private readonly PagamentoService _service;
+        private readonly IPagamentoService _service;
 
-        public PagamentoController(PagamentoService service)
+        public PagamentoController(IPagamentoService service)
         {
             _service = service;
         }

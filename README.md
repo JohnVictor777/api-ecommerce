@@ -242,16 +242,7 @@ ASPNETCORE_ENVIRONMENT=Development
 >
 > Pra gerar uma chave JWT segura, use: `openssl rand -base64 32`
 
-Configure o Banco de Dados:
-
-```bash
-dotnet ef database update
-```
-
-Se o comando não for reconhecido, instale a ferramenta global primeiro:
-```bash
-dotnet tool install --global dotnet-ef
-```
+> As migrations pendentes são aplicadas automaticamente na inicialização da API (o banco é criado se ainda não existir), então não é preciso rodar `dotnet ef database update` manualmente.
 
 Execute a Aplicação:
 
@@ -332,7 +323,7 @@ Para facilitar o desenvolvimento e a execução da API, este projeto conta com s
    A API estará disponível em `http://localhost:5000`.
    Você pode acessar o Swagger em `http://localhost:5000/swagger/index.html`.
 
-5. **Rodar as migrations dentro do ambiente Docker:** se for a primeira vez subindo o banco, aplique as migrations apontando pro container (`Server=localhost,1433` a partir do host, já que a porta 1433 está mapeada).
+> O serviço da API só inicia depois que o SQL Server está saudável (`healthcheck`) e aplica as migrations sozinho na inicialização — não há passo manual de migration.
 
 ---
 
