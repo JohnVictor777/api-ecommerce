@@ -11,6 +11,7 @@ namespace ApiEcommerce.DTOs
 
         [Required(ErrorMessage = "O e-mail do usuário é obrigatório.")]
         [EmailAddress(ErrorMessage = "Formato de e-mail inválido.")]
+        [StringLength(256, ErrorMessage = "O e-mail deve ter no máximo 256 caracteres.")]
         public string Email { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "A senha é obrigatória.")]
