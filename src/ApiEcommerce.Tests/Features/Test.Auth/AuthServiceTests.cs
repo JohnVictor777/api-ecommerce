@@ -81,5 +81,15 @@ namespace ApiEcommerce.Tests.Auth
 
             Assert.Null(token);
         }
+
+        [Fact]
+        public async Task Login_SenhaArmazenadaVazia_DeveRetornarNull()
+        {
+            _usuario.Senha = string.Empty;
+
+            var token = await _service.Login(new LoginDTO { Email = _usuario.Email, Senha = "senha-correta" });
+
+            Assert.Null(token);
+        }
     }
 }

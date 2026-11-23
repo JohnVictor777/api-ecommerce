@@ -30,7 +30,7 @@ namespace ApiEcommerce.Features.Api.Auth.Services
             {
                 return BCrypt.Net.BCrypt.Verify(senha, hash);
             }
-            catch (BCrypt.Net.SaltParseException)
+            catch (Exception ex) when (ex is BCrypt.Net.SaltParseException or ArgumentException)
             {
                 // Senha gravada antes da adoção do hash: nunca é aceita.
                 return false;
