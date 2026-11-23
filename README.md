@@ -235,7 +235,7 @@ Jwt__Issuer="ApiEcommerce"
 Jwt__Audience="ApiEcommerce"
 Jwt__ExpireMinutes=60
 Admin__Email="admin@exemplo.com"
-Admin__Senha="UmaSenhaForteParaOAdmin"
+Admin__Senha="SUA_SENHA_DE_ADMIN"
 ConnectionStrings__DefaultConnection="Server=localhost;Database=ApiEcommerce;User Id=sa;Password=SUA_SENHA_AQUI;TrustServerCertificate=True;"
 ASPNETCORE_ENVIRONMENT=Development
 ```
@@ -326,7 +326,7 @@ Para facilitar o desenvolvimento e a execução da API, este projeto conta com s
    MSSQL_SA_PASSWORD=EscolhaUmaSenhaForte!2026
    JWT_KEY=uma-chave-aleatoria-com-pelo-menos-32-caracteres
    ADMIN_EMAIL=admin@exemplo.com
-   ADMIN_SENHA=UmaSenhaForteParaOAdmin
+   ADMIN_SENHA=SUA_SENHA_DE_ADMIN
    ```
 
 3. **Suba os containers:**
