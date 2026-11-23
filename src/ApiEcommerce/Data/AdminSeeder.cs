@@ -1,3 +1,4 @@
+using Serilog;
 using ApiEcommerce.Features.Api.Usuarios.Repositories;
 using ApiEcommerce.Models;
 using ApiEcommerce.Shared;
@@ -18,8 +19,13 @@ namespace ApiEcommerce.Data
             using var scope = services.CreateScope();
             var repository = scope.ServiceProvider.GetRequiredService<IUsuarioRepository>();
 
-            if (await repository.GetByEmail(email) != null)
+            var existente = await repository.GetByEmail(email);
+            if (existente != null)
+            {
+                if (existente.Role != Roles.Admin)
+                    Log.Warning("Administrador não criado: o e-mail configurado em Admin:Email já pertence a um usuário comum.");
                 return;
+            }
 
             await repository.Add(new Usuario
             {
