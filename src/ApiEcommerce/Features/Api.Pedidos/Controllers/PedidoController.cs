@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ApiEcommerce.DTOs;
 using ApiEcommerce.Features.Api.Pedidos.DTOs.Update;
-using ApiEcommerce.Services;
+using ApiEcommerce.Features.Api.Pedidos.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -17,9 +17,9 @@ namespace ApiEcommerce.Controllers
     [Route("api/[controller]")]
     public class PedidoController : ControllerBase
     {
-        private readonly PedidoService _service;
+        private readonly IPedidoService _service;
 
-        public PedidoController(PedidoService service)
+        public PedidoController(IPedidoService service)
         {
             _service = service;
         }
