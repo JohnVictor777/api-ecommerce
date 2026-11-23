@@ -16,7 +16,7 @@ O principal objetivo ao desenvolver esta API foi criar uma base robusta e extens
 
 A API já oferece um conjunto de funcionalidades essenciais para um e-commerce:
 
-- **Autenticação e Autorização JWT:** Proteção de endpoints sensíveis utilizando JSON Web Tokens, com suporte a perfis de acesso (Roles). *(veja a nota sobre o estado atual do login na seção "Segurança e Autenticação")*
+- **Autenticação e Autorização JWT:** Proteção de endpoints sensíveis utilizando JSON Web Tokens, com suporte a perfis de acesso (Roles).
 
 - **Gerenciamento de Produtos:** Operações CRUD completas para produtos, incluindo atributos como nome, preço e controle de estoque.
 
@@ -234,6 +234,8 @@ Jwt__Key="uma-chave-aleatoria-com-pelo-menos-32-caracteres"
 Jwt__Issuer="ApiEcommerce"
 Jwt__Audience="ApiEcommerce"
 Jwt__ExpireMinutes=60
+Admin__Email="admin@exemplo.com"
+Admin__Senha="UmaSenhaForteParaOAdmin"
 ConnectionStrings__DefaultConnection="Server=localhost;Database=ApiEcommerce;User Id=sa;Password=SUA_SENHA_AQUI;TrustServerCertificate=True;"
 ASPNETCORE_ENVIRONMENT=Development
 ```
@@ -264,11 +266,23 @@ dotnet test
 
 Para acessar endpoints protegidos:
 
-1. Faça login via `POST /api/Auth/login`
-2. Copie o Token JWT retornado
-3. No Swagger, clique em **Authorize** e insira: `Bearer SEU_TOKEN`
+1. Cadastre-se via `POST /api/Usuario` (rota pública) informando `nome`, `email` e `senha`
+2. Faça login via `POST /api/Auth/login` informando `email` e `senha`
+3. Copie o Token JWT retornado
+4. No Swagger, clique em **Authorize** e insira: `Bearer SEU_TOKEN`
 
-> 🚧 **Estado atual do login:** o endpoint `/api/Auth/login` ainda está em desenvolvimento — atualmente ele gera um token JWT válido sem validar usuário ou senha reais. Ele existe para permitir testar o restante do pipeline de autenticação (geração de token, validação de assinatura, proteção de rotas com `[Authorize]`) enquanto a lógica de autenticação real (verificação de credenciais contra o banco, hash de senha) ainda não foi conectada a esse endpoint.
+As senhas são armazenadas com hash BCrypt e o e-mail é único por usuário.
+
+### Perfis de acesso
+
+| Perfil | Como é obtido | O que pode fazer |
+|---|---|---|
+| `User` | Todo cadastro feito pela API | Consultar, alterar e excluir apenas o próprio cadastro; usar carrinhos, pedidos e pagamentos |
+| `Admin` | Criado na inicialização a partir de `Admin__Email` / `Admin__Senha` | Tudo acima, além de listar usuários, acessar qualquer cadastro e criar, alterar e excluir produtos |
+
+A consulta de produtos (`GET /api/Produto`) é pública.
+
+> Para ter um administrador, defina `Admin__Email` e `Admin__Senha` no `.env` (ou `ADMIN_EMAIL` e `ADMIN_SENHA` no `.env` do Docker). Se as variáveis não forem definidas, nenhum administrador é criado.
 
 ---
 
@@ -279,7 +293,7 @@ Para acessar endpoints protegidos:
 - [x] Serilog (Console, File, SQL Server)
 - [x] Testes unitários — estrutura criada e organizada por Feature
 - [x] Docker — containerização da API e do banco de dados
-- [ ] Login real — validar usuário e senha contra o banco de dados
+- [x] Login real — validar usuário e senha contra o banco de dados
 - [ ] Deploy — publicação em ambiente de produção (Azure / Railway / Render)
 - [ ] GitHub Actions — CI/CD automatizado
 - [ ] Validação Avançada com FluentValidation
@@ -311,6 +325,8 @@ Para facilitar o desenvolvimento e a execução da API, este projeto conta com s
    ```
    MSSQL_SA_PASSWORD=EscolhaUmaSenhaForte!2026
    JWT_KEY=uma-chave-aleatoria-com-pelo-menos-32-caracteres
+   ADMIN_EMAIL=admin@exemplo.com
+   ADMIN_SENHA=UmaSenhaForteParaOAdmin
    ```
 
 3. **Suba os containers:**

@@ -13,6 +13,6 @@ namespace ApiEcommerce.Features.Api.Usuarios.DTOs.Update
                 [EmailAddress(ErrorMessage = "Formato de e-mail inválido.")]
                 public string Email { get; set; } = string.Empty;
                 [StringLength(50, MinimumLength = 6, ErrorMessage = "A senha deve ter entre 6 e 50 caracteres se informada.")]
-                public string? Senha { get; set; } = string.Empty;
+                public string? Senha { get; set; }
         }
 }

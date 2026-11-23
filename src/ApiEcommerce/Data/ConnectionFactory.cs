@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ApiEcommerce.Models;
+using ApiEcommerce.Shared;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApiEcommerce.Data
@@ -26,6 +27,13 @@ namespace ApiEcommerce.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Usuario>(usuario =>
+            {
+                usuario.Property(u => u.Email).HasMaxLength(256);
+                usuario.HasIndex(u => u.Email).IsUnique();
+                usuario.Property(u => u.Role).HasMaxLength(20).HasDefaultValue(Roles.User);
+            });
 
             modelBuilder.Entity<Produto>()
                 .Property(p => p.Preco)

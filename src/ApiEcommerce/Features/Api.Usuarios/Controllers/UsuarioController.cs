@@ -8,6 +8,8 @@ using Microsoft.Extensions.Logging;
 using ApiEcommerce.Services;
 using ApiEcommerce.DTOs;
 using ApiEcommerce.Features.Api.Usuarios.DTOs.Update;
+using System.Security.Claims;
+using ApiEcommerce.Shared;
 using Microsoft.AspNetCore.Authorization;
 using ApiEcommerce.Features.Api.Usuarios.Services;
 
@@ -25,6 +27,7 @@ namespace ApiEcommerce.Controllers
             _service = service;
         }
 
+        [Authorize(Roles = Roles.Admin)]
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -35,6 +38,9 @@ namespace ApiEcommerce.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
+            if (!PodeAcessar(id))
+                return Forbid();
+
             var usuario = await _service.GetById(id);
             if (usuario == null)
                 return NotFound();
@@ -42,6 +48,7 @@ namespace ApiEcommerce.Controllers
             return Ok(usuario);
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Create(UsuarioCreateDTO dto)
         {
@@ -53,6 +60,9 @@ namespace ApiEcommerce.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, UsuarioUpdateDTO dto)
         {
+            if (!PodeAcessar(id))
+                return Forbid();
+
             await _service.Update(id, dto);
             return NoContent();
         }
@@ -60,8 +70,18 @@ namespace ApiEcommerce.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
+            if (!PodeAcessar(id))
+                return Forbid();
+
             await _service.Delete(id);
             return NoContent();
+        }
+
+        // Um usuário só acessa o próprio cadastro; administradores acessam qualquer um.
+        private bool PodeAcessar(Guid usuarioId)
+        {
+            return User.IsInRole(Roles.Admin)
+                || User.FindFirstValue(ClaimTypes.NameIdentifier) == usuarioId.ToString();
         }
     }
 }

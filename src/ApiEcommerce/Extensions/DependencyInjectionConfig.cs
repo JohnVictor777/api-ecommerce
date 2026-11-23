@@ -1,5 +1,7 @@
 using ApiEcommerce.Data;
 
+using ApiEcommerce.Features.Api.Auth.Services;
+
 using ApiEcommerce.Features.Api.Usuarios.Repositories;
 using ApiEcommerce.Features.Api.Usuarios.Services;
 
@@ -35,6 +37,7 @@ namespace ApiEcommerce.Extensions
             services.AddScoped<IPagamentoRepository, PagamentoRepository>();
 
             // Services
+            services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IUsuarioService, UsuarioService>();
             services.AddScoped<IProdutoService, ProdutoService>();
             services.AddScoped<IPedidoService, PedidoService>();

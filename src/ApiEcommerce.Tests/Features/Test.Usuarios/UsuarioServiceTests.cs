@@ -8,6 +8,7 @@ using ApiEcommerce.Features.Api.Usuarios.Repositories;
 using ApiEcommerce.Features.Api.Usuarios.Services;
 using ApiEcommerce.Models;
 using ApiEcommerce.Services;
+using ApiEcommerce.Shared;
 using ApiEcommerce.Shared.Exceptions;
 using Moq;
 
@@ -58,7 +59,7 @@ namespace ApiEcommerce.Tests.Features.Usuarios
                      .Callback<Usuario>(u => usuarioCriado = u)
                      .Returns(Task.CompletedTask);
 
-            var dto = new UsuarioCreateDTO { Nome = "John Doe", Email = "john.doe@example.com" };
+            var dto = new UsuarioCreateDTO { Nome = "John Doe", Email = "john.doe@example.com", Senha = "segredo123" };
 
             // Act
             await _service.Create(dto);
@@ -101,6 +102,75 @@ namespace ApiEcommerce.Tests.Features.Usuarios
             await Assert.ThrowsAsync<NotFoundException>(
                 () => _service.Delete(Guid.NewGuid())
             );
+        }
+
+        [Fact]
+        public async Task Create_DeveArmazenarSenhaComHashEPerfilUser()
+        {
+            // Arrange
+            Usuario? usuarioCriado = null;
+
+            _repoMock.Setup(r => r.Add(It.IsAny<Usuario>()))
+                     .Callback<Usuario>(u => usuarioCriado = u)
+                     .Returns(Task.CompletedTask);
+
+            var dto = new UsuarioCreateDTO { Nome = "John Doe", Email = "john.doe@example.com", Senha = "segredo123" };
+
+            // Act
+            await _service.Create(dto);
+
+            // Assert
+            Assert.NotNull(usuarioCriado);
+            Assert.NotEqual("segredo123", usuarioCriado.Senha);
+            Assert.True(BCrypt.Net.BCrypt.Verify("segredo123", usuarioCriado.Senha));
+            Assert.Equal(Roles.User, usuarioCriado.Role);
+        }
+
+        [Fact]
+        public async Task Create_EmailJaCadastrado_DeveLancarValidationException()
+        {
+            // Arrange
+            _repoMock.Setup(r => r.GetByEmail("john.doe@example.com"))
+                     .ReturnsAsync(new Usuario { Id = Guid.NewGuid(), Email = "john.doe@example.com" });
+
+            var dto = new UsuarioCreateDTO { Nome = "John Doe", Email = "john.doe@example.com", Senha = "segredo123" };
+
+            // Act + Assert
+            await Assert.ThrowsAsync<ValidationException>(() => _service.Create(dto));
+            _repoMock.Verify(r => r.Add(It.IsAny<Usuario>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task Update_EmailDeOutroUsuario_DeveLancarValidationException()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            _repoMock.Setup(r => r.GetById(id))
+                     .ReturnsAsync(new Usuario { Id = id, Nome = "John Doe", Email = "john.doe@example.com" });
+            _repoMock.Setup(r => r.GetByEmail("jane.smith@example.com"))
+                     .ReturnsAsync(new Usuario { Id = Guid.NewGuid(), Email = "jane.smith@example.com" });
+
+            var dto = new UsuarioUpdateDTO { Nome = "John Doe", Email = "jane.smith@example.com" };
+
+            // Act + Assert
+            await Assert.ThrowsAsync<ValidationException>(() => _service.Update(id, dto));
+        }
+
+        [Fact]
+        public async Task Update_ComNovaSenha_DeveArmazenarHash()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            var usuario = new Usuario { Id = id, Nome = "John Doe", Email = "john.doe@example.com", Senha = "hash-antigo" };
+            _repoMock.Setup(r => r.GetById(id)).ReturnsAsync(usuario);
+
+            var dto = new UsuarioUpdateDTO { Nome = "John Doe", Email = "john.doe@example.com", Senha = "novaSenha123" };
+
+            // Act
+            await _service.Update(id, dto);
+
+            // Assert
+            Assert.True(BCrypt.Net.BCrypt.Verify("novaSenha123", usuario.Senha));
         }
     }
 }
