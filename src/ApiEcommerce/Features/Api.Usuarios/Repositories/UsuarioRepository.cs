@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ApiEcommerce.Data;
 using ApiEcommerce.Features.Api.Usuarios.Repositories;
 using ApiEcommerce.Models;
+using ApiEcommerce.Shared.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApiEcommerce.Repositories
@@ -27,6 +28,12 @@ namespace ApiEcommerce.Repositories
         {
             return await _context.Usuarios.FirstOrDefaultAsync(u => u.Id == id);
         }
+
+        public async Task<Usuario?> GetByEmail(string email)
+        {
+            return await _context.Usuarios.FirstOrDefaultAsync(u => u.Email == email);
+        }
+
         public async Task Add(Usuario usuario)
         {
             await _context.Usuarios.AddAsync(usuario);
@@ -44,7 +51,7 @@ namespace ApiEcommerce.Repositories
 
             if (usuario == null)
             {
-                throw new Exception("Usuário não encontrado");
+                throw new NotFoundException("Usuário não encontrado");
             }
             _context.Usuarios.Remove(usuario);
             await _context.SaveChangesAsync();

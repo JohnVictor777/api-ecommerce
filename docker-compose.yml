@@ -34,6 +34,8 @@ services:
       - Jwt__Issuer=ApiEcommerce
       - Jwt__Audience=ApiEcommerce
       - Jwt__ExpireMinutes=60
+      - Admin__Email=${ADMIN_EMAIL:-}
+      - Admin__Senha=${ADMIN_SENHA:-}
     ports:
       - "5000:8080"
     networks:

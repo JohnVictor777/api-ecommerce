@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+using ApiEcommerce.Features.Api.Auth.DTOs;
+using ApiEcommerce.Features.Api.Auth.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace ApiEcommerce.Features.Api.Auth.Controllers
 {
@@ -13,13 +9,16 @@ namespace ApiEcommerce.Features.Api.Auth.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        private readonly TokenService _tokenService;
-        public AuthController(TokenService tokenService) => _tokenService = tokenService;
+        private readonly IAuthService _authService;
+        public AuthController(IAuthService authService) => _authService = authService;
 
         [HttpPost("login")]
-        public IActionResult Login()
+        public async Task<IActionResult> Login([FromBody] LoginDTO dto)
         {
-            var token = _tokenService.GerarToken(Guid.NewGuid(), "teste@teste.com", "Admin");
+            var token = await _authService.Login(dto);
+            if (token == null)
+                return Unauthorized(new { message = "E-mail ou senha inválidos." });
+
             return Ok(new { Token = token });
         }
     }

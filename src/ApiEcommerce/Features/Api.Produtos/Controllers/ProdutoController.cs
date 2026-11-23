@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ApiEcommerce.Features.Api.Produtos.Services;
+using ApiEcommerce.Shared;
 
 namespace ApiEcommerce.Controllers
 {
@@ -41,7 +42,7 @@ namespace ApiEcommerce.Controllers
             return Ok(produto);
         }
 
-        [Authorize]
+        [Authorize(Roles = Roles.Admin)]
         [HttpPost]
         public async Task<IActionResult> Create(ProdutoCreateDTO dto)
         {
@@ -49,6 +50,7 @@ namespace ApiEcommerce.Controllers
             return Created("", dto);
         }
 
+        [Authorize(Roles = Roles.Admin)]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, ProdutoUpdateDTO dto)
         {
@@ -56,7 +58,7 @@ namespace ApiEcommerce.Controllers
             return NoContent();
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = Roles.Admin)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {

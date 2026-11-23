@@ -10,6 +10,7 @@ namespace ApiEcommerce.Features.Api.Usuarios.Repositories
     {
         Task<List<Usuario>> GetAll();
         Task<Usuario?> GetById(Guid id);
+        Task<Usuario?> GetByEmail(string email);
         Task Add(Usuario usuario);
         Task Update(Usuario usuario);
         Task Delete(Guid id);

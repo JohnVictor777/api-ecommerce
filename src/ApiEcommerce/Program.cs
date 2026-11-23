@@ -144,6 +144,8 @@ builder.Host.UseSerilog();
 #region Configurar o middleware para usar HTTPS, autenticação, autorização e logging
 var app = builder.Build();
 
+await app.Services.SeedAdminAsync(app.Configuration);
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
